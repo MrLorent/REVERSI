@@ -21,11 +21,18 @@ typedef struct Jeu{
     int plateau[MAXLARGEUR][MAXLARGEUR];
 }Jeu;
 
+/*---------------PROTOTYPES-------------*/
+void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
+
 int main(){
-    int plateau[MAXLARGEUR][MAXLARGEUR];
+    char plateau[MAXLARGEUR][MAXLARGEUR];
     affichePlateau(plateau);
 
     return 0;
+}
+
+void initPlateau(int plateau[MAXLARGEUR][MAXLARGEUR]){
+    for
 }
 
 void affichePlateau(int plateau[MAXLARGEUR][MAXLARGEUR]){
@@ -40,27 +47,55 @@ void affichePlateau(int plateau[MAXLARGEUR][MAXLARGEUR]){
             cout << "  ";
             break;
         case MAXLARGEUR:
-            cout << "  " << endl;
+            cout << "   " << tabLettres[i-1] << "  " << endl;
             break;
         default:
-            cout << "   " << tabLettres[i];
+            cout << "   " << tabLettres[i-1];
             break;
         }
     }
+    for(int l=0; l <= MAXLARGEUR; l++){
+            switch (l)
+            {
+            case 0:
+                cout << "   ";
+                break;
+            case MAXLARGEUR:
+                cout << "+---+" << endl;
+                break;
+            default:
+                cout << "+---";
+                break;
+            }
+        }
 
     // Affichage des huits lignes du plateau
     for(int h=0; h < MAXLARGEUR; h++){
-        for(int l=0; l < MAXLARGEUR+1; l++){
+        for(int l=0; l <= MAXLARGEUR; l++){
             switch (l)
             {
             case 0:
                 cout << " " << tabChiffres[h];
                 break;
             case MAXLARGEUR:
-                cout << " |" << endl;
+                cout << " |   |" << endl;
                 break;
             default:
                 cout << " |  ";
+                break;
+            }
+        }
+        for(int l=0; l <= MAXLARGEUR; l++){
+            switch (l)
+            {
+            case 0:
+                cout << "   ";
+                break;
+            case MAXLARGEUR:
+                cout << "+---+" << endl;
+                break;
+            default:
+                cout << "+---";
                 break;
             }
         }
