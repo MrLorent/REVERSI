@@ -22,8 +22,47 @@ typedef struct Jeu{
 }Jeu;
 
 int main(){
-    cout << "Tu sais pas lire en fait !";
-    cout << "fefgfnkef";
-    cout << "C'est pas toi qui galère plutôt uesh ?";
+    int plateau[MAXLARGEUR][MAXLARGEUR];
+    affichePlateau(plateau);
+
     return 0;
+}
+
+void affichePlateau(int plateau[MAXLARGEUR][MAXLARGEUR]){
+    const char tabLettres[MAXLARGEUR] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
+    const char tabChiffres[MAXLARGEUR] = { '1', '2', '3', '4', '5', '6', '7', '8' };
+
+    // Affichage de la première ligne: celle des lettres
+    for(int i=0; i<=MAXLARGEUR;i++){
+        switch (i)
+        {
+        case 0:
+            cout << "  ";
+            break;
+        case MAXLARGEUR:
+            cout << "  " << endl;
+            break;
+        default:
+            cout << "   " << tabLettres[i];
+            break;
+        }
+    }
+
+    // Affichage des huits lignes du plateau
+    for(int h=0; h < MAXLARGEUR; h++){
+        for(int l=0; l < MAXLARGEUR+1; l++){
+            switch (l)
+            {
+            case 0:
+                cout << " " << tabChiffres[h];
+                break;
+            case MAXLARGEUR:
+                cout << " |" << endl;
+                break;
+            default:
+                cout << " |  ";
+                break;
+            }
+        }
+    }
 }
