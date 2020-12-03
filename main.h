@@ -18,10 +18,12 @@ const int MAXLARGEUR = 8;
 typedef struct Jeu{
     Joueur joueur1;
     Joueur joueur2;
-    int plateau[MAXLARGEUR][MAXLARGEUR];
+    char plateau[MAXLARGEUR][MAXLARGEUR];
 }Jeu;
 
 /*---------------PROTOTYPES-------------*/
+// JEU
+void initJeu(Jeu * unJeu);
 // PLATEAU
 void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
 void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);

@@ -1,14 +1,29 @@
 #include "main.h"
 
 int main(){
-    Joueur joueur1, joueur2;
-    initJoueur(&joueur1);
-    initJoueur(&joueur2);
-    afficheJoueur(joueur1);
-    afficheJoueur(joueur2);
+    Jeu jeuEnCours;
+    Joueur * joueurCourant = &jeuEnCours.joueur1;
+    char tourSuivant ='y';
 
-    char plateau[MAXLARGEUR][MAXLARGEUR];
-    initPlateau(plateau);
-    affichePlateau(plateau);
+    initJeu(&jeuEnCours);
+    afficheJoueur(jeuEnCours.joueur1);
+    afficheJoueur(jeuEnCours.joueur2);
+    
+    do{
+        cout << "Joueur courant: " << (*joueurCourant).nom << endl;
+        cout << "Nombre de jeton du joueur courant: " << (*joueurCourant).nbJeton << endl;
+        affichePlateau(jeuEnCours.plateau);
+
+        // On change de joueur entre chaque tour
+        if((*joueurCourant).nom == jeuEnCours.joueur1.nom){
+            joueurCourant = &jeuEnCours.joueur2;
+        }else{
+            joueurCourant = &jeuEnCours.joueur1;
+        }
+        cout << "Passer au tour suivant ? (y/n)" << endl;
+        cin >> tourSuivant;
+    }while(tourSuivant == 'y');
+
+
     return 0;
 }
