@@ -22,4 +22,10 @@ typedef struct Jeu{
 }Jeu;
 
 /*---------------PROTOTYPES-------------*/
+// PLATEAU
 void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
+void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
+void afficheLigneTransition();
+// JOUEUR
+void initJoueur(Joueur * joueur);
+void afficheJoueur(Joueur joueur);
