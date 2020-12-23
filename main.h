@@ -6,11 +6,12 @@ using namespace std;
 typedef struct Jeton{
     char couleur; //'b' = blanc, 'n' = noir
     int coordonnees[2]; // abscisse, ordonné
+    Jeton * suivant;
 }Jeton;
 
 typedef struct Joueur{
     char nom[20];
-    Jeton listeJeton[64];
+    Jeton * listeJetons;
     int nbJeton;
 }Joueur;
 
@@ -43,5 +44,12 @@ void afficheLigneTransition();
 // Constructeurs
 void initJoueur(Joueur * joueur);
 // Accesseurs
+void ajouteJeton(Joueur * unJoueur, Jeton * unJeton);
 // Affichage
 void afficheJoueur(Joueur joueur);
+
+// JETON
+// Constructeurs
+void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]);
+// Accesseurs
+// Affichage

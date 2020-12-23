@@ -7,9 +7,14 @@ void initJoueur(Joueur * unJoueur){
 	(*unJoueur).nbJeton = 0;
 }
 
-void ajouteJeton(Joueur * unJoueur, Jeton unJeton){
-	(*unJoueur).listeJeton[(*unJoueur).nbJeton] = unJeton;
-	((*unJoueur).nbJeton)++;
+void ajouteJeton(Joueur * unJoueur, Jeton * unJeton){
+	if((*unJoueur).listeJetons == NULL){
+		(*unJoueur).listeJetons = unJeton;
+	}else{
+		(*unJeton).suivant = (*unJoueur).listeJetons;
+		(*unJoueur).listeJetons = unJeton;
+		((*unJoueur).nbJeton)++;
+	}
 }
 
 void afficheJoueur(Joueur joueur){
