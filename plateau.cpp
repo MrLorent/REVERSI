@@ -7,13 +7,12 @@ void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
             plateau[l][c]='v';
         }
     }
+}
 
-    // Initialisation des quatres premiers jetons au centre
-    // C'est provisoire, il faudrait qu'ils soient placés via lecture de la liste de jeton
-    plateau[3][3] = 'b';
-    plateau[3][4] = 'n';
-    plateau[4][3] = 'n';
-    plateau[4][4] = 'b';
+void ajouteJetonPlateau(Joueur unJoueur, char lePlateau[MAXLARGEUR][MAXLARGEUR]){
+    for(int i=0; i < unJoueur.nbJeton; i++){
+        lePlateau[unJoueur.listeJetons[i].coordonnees[0]][unJoueur.listeJetons[i].coordonnees[1]] = unJoueur.listeJetons[i].couleur;
+    }
 }
 
 void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){

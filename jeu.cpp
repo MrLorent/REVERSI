@@ -7,13 +7,16 @@ void initJeu(Jeu * unJeu){
 	// initialisation du premier joueur et de ses deux premiers jetons
 	initJoueur(&(*unJeu).joueur1);
 	initJeton(&jetonBlanc1, 'b', coor1);
-	ajouteJeton(&(*unJeu).joueur1, &jetonBlanc1);
+	ajouteJetonJoueur(&(*unJeu).joueur1, jetonBlanc1);
 	initJeton(&jetonBlanc2, 'b', coor2);
-	ajouteJeton(&(*unJeu).joueur1, &jetonBlanc2);
+	ajouteJetonJoueur(&(*unJeu).joueur1, jetonBlanc2);
 
 	// initialisation du second joueur et de ses deux premiers jetons
     initJoueur(&(*unJeu).joueur2);
-
+	initJeton(&jetonNoir1, 'n', coor3);
+	ajouteJetonJoueur(&(*unJeu).joueur2, jetonNoir1);
+	initJeton(&jetonNoir2, 'n', coor4);
+	ajouteJetonJoueur(&(*unJeu).joueur2, jetonNoir2);
 
 	(*unJeu).joueurCourant = &(*unJeu).joueur1;
 	initPlateau((*unJeu).plateau);

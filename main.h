@@ -6,12 +6,11 @@ using namespace std;
 typedef struct Jeton{
     char couleur; //'b' = blanc, 'n' = noir
     int coordonnees[2]; // abscisse, ordonné
-    Jeton * suivant;
 }Jeton;
 
 typedef struct Joueur{
     char nom[20];
-    Jeton * listeJetons;
+    Jeton listeJetons[64];
     int nbJeton;
 }Joueur;
 
@@ -36,6 +35,7 @@ void changeJoueurCourant(Jeu * unJeu);
 // Constructeurs
 void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
 // Accesseurs
+void ajouteJetonPlateau(Joueur unJoueur, char lePlateau[MAXLARGEUR][MAXLARGEUR]);
 // Affichage
 void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
 void afficheLigneTransition();
@@ -44,7 +44,7 @@ void afficheLigneTransition();
 // Constructeurs
 void initJoueur(Joueur * joueur);
 // Accesseurs
-void ajouteJeton(Joueur * unJoueur, Jeton * unJeton);
+void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton);
 // Affichage
 void afficheJoueur(Joueur joueur);
 

@@ -11,6 +11,8 @@ int main(){
     do{
         cout << "Joueur courant: " << (*leJeu.joueurCourant).nom << endl;
         cout << "Nombre de jeton du joueur courant: " << (*leJeu.joueurCourant).nbJeton << endl;
+        ajouteJetonPlateau(leJeu.joueur1, leJeu.plateau);
+        ajouteJetonPlateau(leJeu.joueur2, leJeu.plateau);
         affichePlateau(leJeu.plateau);
 
         changeJoueurCourant(&leJeu);
