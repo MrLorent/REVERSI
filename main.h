@@ -10,6 +10,7 @@ typedef struct Jeton{
 
 typedef struct Joueur{
     char nom[20];
+    char couleur;
     Jeton listeJetons[64];
     int nbJeton;
 }Joueur;
@@ -42,7 +43,7 @@ void afficheLigneTransition();
 
 // JOUEUR
 // Constructeurs
-void initJoueur(Joueur * joueur);
+void initJoueur(Joueur * unJoueur, char uneCouleur);
 // Accesseurs
 void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton);
 // Affichage

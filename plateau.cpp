@@ -19,6 +19,8 @@ void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
     const char tabLettres[MAXLARGEUR] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
     const char tabChiffres[MAXLARGEUR] = { '1', '2', '3', '4', '5', '6', '7', '8' };
 
+    // Espacement
+    cout << endl;
     // Affichage de la première ligne de lettres
     cout << "  ";
     for(int i=0; i<MAXLARGEUR;i++){
@@ -52,6 +54,8 @@ void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
         cout << endl;
         afficheLigneTransition();
     }
+    // Espacement
+    cout << endl;
 }
 
 void afficheLigneTransition(){

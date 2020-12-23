@@ -1,15 +1,16 @@
 #include "main.h"
 
-void initJoueur(Joueur * unJoueur){
-	cout << "ENREGISTREMENT D'UN JOUEUR" << endl;
+void initJoueur(Joueur * unJoueur, char uneCouleur){
 	cout << "Veuillez entrer le nom du joueur:" << endl;
-	cin >> (*unJoueur).nom;
-	(*unJoueur).nbJeton = 0;
+	cin >> unJoueur->nom;
+	unJoueur->nbJeton = 0;
+	unJoueur->couleur = uneCouleur;
 }
 
 void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton){
-	(*unJoueur).listeJetons[(*unJoueur).nbJeton] = unJeton;
-	((*unJoueur).nbJeton)++;
+	unJeton.couleur = unJoueur->couleur;
+	unJoueur->listeJetons[unJoueur->nbJeton] = unJeton;
+	(unJoueur->nbJeton)++;
 }
 
 void afficheJoueur(Joueur joueur){
