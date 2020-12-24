@@ -2,6 +2,7 @@
 
 int main(){
     Jeu leJeu;
+    Jeton nouveauJeton;
     char saisieUt[2];
     int casePrise[2];
     bool partieTerminee = false;
@@ -28,8 +29,12 @@ int main(){
         do{
             cin >> saisieUt;
         }while(verifSaisie(leJeu.plateau, saisieUt, casePrise) != 0);
+        cout << casePrise[0] << endl;
+        cout << casePrise[1] << endl;
 
         // FIN DU TOUR
+        initJeton(&nouveauJeton, leJeu.joueurCourant->couleur, casePrise);
+        ajouteJetonJoueur(leJeu.joueurCourant, nouveauJeton);
         // Passage au tour suivant
         changeJoueurCourant(&leJeu);
     }while(!partieTerminee);

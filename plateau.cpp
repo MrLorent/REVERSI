@@ -11,7 +11,7 @@ void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
 
 void ajouteJetonPlateau(Joueur unJoueur, char lePlateau[MAXLARGEUR][MAXLARGEUR]){
     for(int i=0; i < unJoueur.nbJeton; i++){
-        lePlateau[unJoueur.listeJetons[i].coordonnees[0]][unJoueur.listeJetons[i].coordonnees[1]] = unJoueur.listeJetons[i].couleur;
+        lePlateau[unJoueur.listeJetons[i].coordonnees[1]][unJoueur.listeJetons[i].coordonnees[0]] = unJoueur.listeJetons[i].couleur;
     }
 }
 
