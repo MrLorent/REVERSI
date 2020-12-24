@@ -54,3 +54,8 @@ void afficheJoueur(Joueur joueur);
 void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]);
 // Accesseurs
 // Affichage
+
+// MAIN
+// Gestion des saisies utilisateur
+int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int saisieTraduite[2]);
+void convertCoordonnees(char saisieUt[2], int saisieTraduite[2]);
