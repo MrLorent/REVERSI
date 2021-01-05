@@ -29,6 +29,12 @@ void initJeu(Jeu * unJeu){
 	initPlateau(unJeu->plateau);
 }
 
+void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]){
+	unJeton->couleur = couleur;
+	unJeton->coordonnees[0] = coordonnees[0];
+	unJeton->coordonnees[1] = coordonnees[1];
+}
+
 void changeJoueurCourant(Jeu * unJeu){
 	if(strcmp(unJeu->joueurCourant->nom, (*unJeu).joueur1.nom) == 0 ){
 		unJeu->joueurCourant = &unJeu->joueur2;

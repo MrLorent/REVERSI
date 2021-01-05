@@ -60,7 +60,7 @@ int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coor
     }else{
         // Dans un second temps, on traduit l'entrée utilisateur en coordonnées pour vérifier si la case est disponible
         convertCoordonnees(saisieUt, coorCase);
-        if(plateau[coorCase[0]][coorCase[1]] != 'v'){
+        if(plateau[coorCase[1]][coorCase[0]] != 'v'){
             cout << "Erreur: la case saisie est déjà occupée." << endl;
             cout << "Veuillez saisir une nouvelle case :" << endl;
             return 1;
