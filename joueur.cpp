@@ -1,4 +1,10 @@
-#include "main.h"
+#include <iostream>
+#include <cstring>
+#include "modele.h"
+#include "vue.h"
+#include "controleur.h"
+
+using namespace std;
 
 void initJoueur(Joueur * unJoueur, char uneCouleur){
 	cout << "Veuillez entrer le nom du joueur:" << endl;

@@ -1,4 +1,10 @@
-#include "main.h"
+#include <iostream>
+#include <cstring>
+#include "modele.h"
+#include "vue.h"
+#include "controleur.h"
+
+using namespace std;
 
 int main(){
     Jeu leJeu;
@@ -60,6 +66,7 @@ int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coor
     }else{
         // Dans un second temps, on traduit l'entrée utilisateur en coordonnées pour vérifier si la case est disponible
         convertCoordonnees(saisieUt, coorCase);
+        // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
         if(plateau[coorCase[1]][coorCase[0]] != 'v'){
             cout << "Erreur: la case saisie est déjà occupée." << endl;
             cout << "Veuillez saisir une nouvelle case :" << endl;

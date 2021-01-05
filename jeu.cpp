@@ -1,4 +1,10 @@
-#include "main.h"
+#include <iostream>
+#include <cstring>
+#include "modele.h"
+#include "vue.h"
+#include "controleur.h"
+
+using namespace std;
 
 void initJeu(Jeu * unJeu){
 	Jeton jetonBlanc1, jetonBlanc2, jetonNoir1, jetonNoir2;

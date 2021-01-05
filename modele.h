@@ -21,4 +21,14 @@ typedef struct Jeu{
     char plateau[MAXLARGEUR][MAXLARGEUR];
 }Jeu;
 
+// JEU
+void initJeu(Jeu * unJeu);
+void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]);
+
+// PLATEAU
+void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
+
+// JOUEUR
+void initJoueur(Joueur * unJoueur, char uneCouleur);
+
 #endif

@@ -1,4 +1,10 @@
-#include "main.h"
+#include <iostream>
+#include <cstring>
+#include "modele.h"
+#include "vue.h"
+#include "controleur.h"
+
+using namespace std;
 
 void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
     // Initialisation de chaque case à "vide"
@@ -11,6 +17,7 @@ void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
 
 void ajouteJetonPlateau(Joueur unJoueur, char lePlateau[MAXLARGEUR][MAXLARGEUR]){
     for(int i=0; i < unJoueur.nbJeton; i++){
+        // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
         lePlateau[unJoueur.listeJetons[i].coordonnees[1]][unJoueur.listeJetons[i].coordonnees[0]] = unJoueur.listeJetons[i].couleur;
     }
 }
