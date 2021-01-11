@@ -1,97 +1,109 @@
 #include <iostream>
 #include <cstring>
+#include "modele.h"
+#include "vue.h"
+#include "controleur.h"
 
 using namespace std;
 
-typedef struct Jeton{
-    char couleur; //'b' = blanc, 'n' = noir
-    int coordonnees[2]; // abscisse, ordonné
-}Jeton;
-
-typedef struct Joueur{
-    string nom;
-    Jeton listeJeton[64];
-    int nbJeton;
-}Joueur;
-
-const int MAXLARGEUR = 8;
-typedef struct Jeu{
-    Joueur joueur1;
-    Joueur joueur2;
-    int plateau[MAXLARGEUR][MAXLARGEUR];
-}Jeu;
-
-/*---------------PROTOTYPES-------------*/
-void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
-void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
-void afficheLigneTransition();
-
 int main(){
-    char plateau[MAXLARGEUR][MAXLARGEUR];
-    initPlateau(plateau);
-    affichePlateau(plateau);
+    Jeu leJeu;
+    Jeton nouveauJeton;
+    char saisieUt[2];
+    int casePrise[2];
+    bool partieTerminee = false;
+
+    initJeu(&leJeu);
+    
+    do{
+        // DÉBUT DU TOUR
+        // Affichage des informations sur le joueur courant
+        cout << endl;
+        cout << "NOUVEAU TOUR DE JEU:" << endl;
+        cout << "Joueur courant: " << leJeu.joueurCourant->nom << endl;
+        cout << "Nombre de jeton du joueur courant: " << leJeu.joueurCourant->nbJeton << endl;
+
+        // Mise à jour des données du plateau
+        ajouteJetonPlateau(leJeu.joueur1, leJeu.plateau);
+        ajouteJetonPlateau(leJeu.joueur2, leJeu.plateau);
+        
+        // Affichage du plateau
+        affichePlateau(leJeu.plateau);
+
+        // DÉROULÉ DU TOUR
+        cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
+        do{
+            cin >> saisieUt;
+        }while(verifSaisie(leJeu.plateau, saisieUt, casePrise) != 0);
+        cout << casePrise[0] << endl;
+        cout << casePrise[1] << endl;
+
+        // FIN DU TOUR
+        initJeton(&nouveauJeton, leJeu.joueurCourant->couleur, casePrise);
+        ajouteJetonJoueur(leJeu.joueurCourant, nouveauJeton);
+        // Passage au tour suivant
+        changeJoueurCourant(&leJeu);
+    }while(!partieTerminee);
+
     return 0;
 }
 
-void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
-    // Initialisation de chaque case à "vide"
-    for(int l=0;l<MAXLARGEUR;l++){
-        for(int c=0;c<MAXLARGEUR;c++){
-            plateau[l][c]='v';
-        }
+int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]){
+    // On traite le cas où les coordonnées sont saisies dans l'ordre inverse
+    if((saisieUt[1] >= 'A' && saisieUt[1] <= 'H') || (saisieUt[1] >= 'a' && saisieUt[1] <= 'h')){
+        int tmp;
+        tmp = saisieUt[0];
+        saisieUt[0] = saisieUt[1];
+        saisieUt[1] = tmp;
     }
 
-    // Initialisation des quatres premiers jetons au centre
-    // C'est provisoire, il faudrait qu'ils soient placés via lecture de la liste de jeton
-    plateau[3][3] = 'b';
-    plateau[3][4] = 'n';
-    plateau[4][3] = 'n';
-    plateau[4][4] = 'b';
+    // Dans un premier temps, on vérifie que la case saisie fait bien partie du tableau
+    saisieUt[0] = tolower(saisieUt[0]);
+    if(!(saisieUt[0] >= 'a' && saisieUt[0] <= 'h') || !(saisieUt[1] >= '1' && saisieUt[1] <= '8')){
+        cout << "Erreur: la case saisie n'existe pas dans la grille." << endl;
+        cout << "Veuillez saisir une nouvelle case :" << endl;
+        return 1;
+    }else{
+        // Dans un second temps, on traduit l'entrée utilisateur en coordonnées pour vérifier si la case est disponible
+        convertCoordonnees(saisieUt, coorCase);
+        // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
+        if(plateau[coorCase[1]][coorCase[0]] != 'v'){
+            cout << "Erreur: la case saisie est déjà occupée." << endl;
+            cout << "Veuillez saisir une nouvelle case :" << endl;
+            return 1;
+        }else{
+            return 0;
+        }
+    }
 }
 
-void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
-    const char tabLettres[MAXLARGEUR] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
-    const char tabChiffres[MAXLARGEUR] = { '1', '2', '3', '4', '5', '6', '7', '8' };
-
-    // Affichage de la première ligne de lettres
-    cout << "  ";
-    for(int i=0; i<MAXLARGEUR;i++){
-        if(i == MAXLARGEUR-1){
-            cout << "   " << tabLettres[MAXLARGEUR-1] << "  " << endl;
-        }else
+void convertCoordonnees(char saisieUt[2], int coorCase[2]){
+    switch (saisieUt[0])
         {
-            cout << "   " << tabLettres[i];
+        case 'a':
+            coorCase[0] = 0;
+            break;
+        case 'b':
+            coorCase[0] = 1;
+            break;
+        case 'c':
+            coorCase[0] = 2;
+            break;
+        case 'd':
+            coorCase[0] = 3;
+            break;
+        case 'e':
+            coorCase[0] = 4;
+            break;
+        case 'f':
+            coorCase[0] = 5;
+            break;
+        case 'g':
+            coorCase[0] = 6;
+            break;
+        default:
+            coorCase[0] = 7;
+            break;
         }
-    }
-    afficheLigneTransition();
-
-    // Affichage du plateau
-    for(int l=0; l < MAXLARGEUR; l++){
-        //on affiche le numéro de ligne
-        cout << " " << tabChiffres[l] << " |";
-        for(int c=0; c < MAXLARGEUR; c++){
-            switch (plateau[l][c])
-            {
-            case 'b':
-                cout << " * |";
-                break;
-            case 'n':
-                cout << " 0 |";
-                break;
-            default:
-                cout << "   |";
-                break;
-            }
-        }
-        cout << endl;
-        afficheLigneTransition();
-    }
-}
-
-void afficheLigneTransition(){
-    cout << "   ";
-    for(int l=0; l < MAXLARGEUR-1; l++){
-        cout << "+---";
-    }
-    cout << "+---+" << endl;
+    coorCase[1] = ((int)(saisieUt[1] - '0')) - 1;
 }
