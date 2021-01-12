@@ -12,6 +12,7 @@ void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton);
 
 // MAIN
 int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int saisieTraduite[2]);
+bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int coorCase[2], Joueur * joueurCourant );
 void convertCoordonnees(char saisieUt[2], int saisieTraduite[2]);
 
 #endif

@@ -18,8 +18,7 @@ int main(){
     do{
         // DÉBUT DU TOUR
         // Affichage des informations sur le joueur courant
-        system("cls");
-        cout << endl;
+        //system("cls");
         cout << "NOUVEAU TOUR DE JEU:" << endl;
         cout << "Joueur courant: " << leJeu.joueurCourant->nom << endl;
         cout << "Nombre de jeton du joueur courant: " << leJeu.joueurCourant->nbJeton << endl;
@@ -36,6 +35,9 @@ int main(){
         do{
             cin >> saisieUt;
         }while(verifSaisie(leJeu.plateau, saisieUt, casePrise) != 0);
+            if(verifPlacement(leJeu.plateau,casePrise, leJeu.joueurCourant)==false) {
+                cout << 'Erreur: il faut entourer un pion adverse pour pouvoir placer le votre. \n';
+            }
         cout << casePrise[0] << endl;
         cout << casePrise[1] << endl;
 
@@ -49,7 +51,7 @@ int main(){
     return 0;
 }
 
-int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2], Joueur joueurCourant){
+int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]){
     // On traite le cas où les coordonnées sont saisies dans l'ordre inverse
     if((saisieUt[1] >= 'A' && saisieUt[1] <= 'H') || (saisieUt[1] >= 'a' && saisieUt[1] <= 'h')){
         int tmp;
@@ -78,56 +80,56 @@ int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coor
     }
 }
 
-bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int coorCase[2], Joueur joueurCourant ){
+bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int coorCase[2], Joueur * joueurCourant ){
     bool jetonEntoure=false;
     switch (joueurCourant->couleur)
         {
         case 'b':
             
             if (plateau[coorCase[1]-1][coorCase[0]] == 'n'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]-1-i][coorCase[0]] == 'b') jetonEntoure=true;
                 }
             }
 
             if (plateau[coorCase[1]-1][coorCase[0]-1] == 'n'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]-1-i][coorCase[0]-1-i] == 'b') jetonEntoure=true;
                 }
             }
 
             if (plateau[coorCase[1]][coorCase[0]-1] == 'n'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]][coorCase[0]-1-i] == 'b') jetonEntoure=true;
                 }
             }
 
             if (plateau[coorCase[1]+1][coorCase[0]-1] == 'n'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]+1+i][coorCase[0]-1-i] == 'b') jetonEntoure=true;
                 }
             } 
 
             if (plateau[coorCase[1]+1][coorCase[0]] == 'n'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]+1+i][coorCase[0]] == 'b') jetonEntoure=true;
                 } 
             } 
 
             if (plateau[coorCase[1]+1][coorCase[0]+1] == 'n'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]+1+i][coorCase[0]-1+i] == 'b') jetonEntoure=true;
                 }  
             } 
 
             if (plateau[coorCase[1]][coorCase[0]+1] == 'n'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]][coorCase[0]+1+i] == 'b') jetonEntoure=true;
                 }
             }  
 
             if (plateau[coorCase[1]-1][coorCase[0]+1] == 'n'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]-1-i][coorCase[0]+1+i] == 'b') jetonEntoure=true;
                 }
             }
@@ -136,55 +138,55 @@ bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int coorCase[2], Joueu
 
         case 'n':
                     if (plateau[coorCase[1]-1][coorCase[0]] == 'b'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]-1-i][coorCase[0]] == 'n') jetonEntoure=true;
                 }
             }
             
             if (plateau[coorCase[1]-1][coorCase[0]-1] == 'b'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]-1-i][coorCase[0]-1-i] == 'n') jetonEntoure=true;
                 }
             }
 
             if (plateau[coorCase[1]][coorCase[0]-1] == 'b'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]][coorCase[0]-1-i] == 'n') jetonEntoure=true;
                 }
             }
 
             if (plateau[coorCase[1]+1][coorCase[0]-1] == 'b'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]+1+i][coorCase[0]-1-i] == 'n') jetonEntoure=true;
                 }
             } 
 
             if (plateau[coorCase[1]+1][coorCase[0]] == 'b'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]+1+i][coorCase[0]] == 'n') jetonEntoure=true;
                 } 
             } 
 
             if (plateau[coorCase[1]+1][coorCase[0]+1] == 'b'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]+1+i][coorCase[0]-1+i] == 'n') jetonEntoure=true;
                 }  
             } 
 
             if (plateau[coorCase[1]][coorCase[0]+1] == 'b'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]][coorCase[0]+1+i] == 'n') jetonEntoure=true;
                 }
             }  
 
             if (plateau[coorCase[1]-1][coorCase[0]+1] == 'b'){
-                for (int i=0, i=8; i++){
+                for (int i=0; i<8; i++){
                     if(plateau[coorCase[1]-1-i][coorCase[0]+1+i] == 'n') jetonEntoure=true;
                 }
             } 
             break;
         }
-    if (jetonEntoure) return true;
+    if (jetonEntoure) {return true;}
 }
 
 void convertCoordonnees(char saisieUt[2], int coorCase[2]){
