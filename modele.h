@@ -10,6 +10,17 @@ const int BAS_GAUCHE = 5;
 const int BAS_MILIEU = 6;
 const int BAS_DROIT = 7;
 
+const int VECTEURS[8][2] = {
+    {-1, -1},
+    {0, -1},
+    {1, -1},
+    {-1, 0},
+    {1, 0},
+    {-1, 1},
+    {0, 1},
+    {1, 1}
+};
+
 
 typedef struct Jeton{
     char couleur; //'b' = blanc, 'n' = noir
