@@ -34,7 +34,7 @@ int main(){
         cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
         do{
             cin >> saisieUt;
-        }while(verifSaisie(leJeu.plateau, saisieUt, casePrise, leJeu.joueurCourant->couleur) != 0);
+        }while(!saisieCorrecte(leJeu.plateau, saisieUt, casePrise, leJeu.joueurCourant->couleur));
         cout << casePrise[0] << endl;
         cout << casePrise[1] << endl;
 
@@ -48,7 +48,7 @@ int main(){
     return 0;
 }
 
-int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2], char couleurJoueur){
+bool saisieCorrecte(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2], char couleurJoueur){
     // On traite le cas où les coordonnées sont saisies dans l'ordre inverse
     if((saisieUt[1] >= 'A' && saisieUt[1] <= 'H') || (saisieUt[1] >= 'a' && saisieUt[1] <= 'h')){
         int tmp;
@@ -62,7 +62,7 @@ int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coor
     if(!(saisieUt[0] >= 'a' && saisieUt[0] <= 'h') || !(saisieUt[1] >= '1' && saisieUt[1] <= '8')){
         cout << "Erreur: la case saisie n'existe pas dans la grille." << endl;
         cout << "Veuillez saisir une nouvelle case :" << endl;
-        return 1;
+        return false;
     }else{
         // Dans un second temps, on traduit l'entrée utilisateur en coordonnées pour vérifier si la case est disponible
         convertCoordonnees(saisieUt, coorCase);
@@ -70,126 +70,149 @@ int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coor
         if(plateau[coorCase[1]][coorCase[0]] != 'v'){
             cout << "Erreur: la case saisie est déjà occupée." << endl;
             cout << "Veuillez saisir une nouvelle case :" << endl;
-            return 1;
+            return false;
         }else{
             if(verifPlacement(plateau, coorCase, couleurJoueur)){
-                return 0;
+                return true;
             }else{
                 cout << "Placement incorrect" << endl;
-                return 1;
+                return false;
             }
             
         }
     }
 }
 
-bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int coorCase[2], char couleurJoueur ){
-    bool jetonEntoure=false;
-    switch (couleurJoueur)
-        {
-        case 'b':
-            
-            if (plateau[coorCase[1]-1][coorCase[0]] == 'n'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]-1-i][coorCase[0]] == 'b') jetonEntoure=true;
+bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2], char couleurJoueur ){
+    bool coupValide = false;
+    char couleurAdversaire;
+    int directionsPossible[8][2];
+
+    directionsPossible[HAUT_GAUCHE][0] = caseSouhaitee[0]-1;
+    directionsPossible[HAUT_GAUCHE][1] = caseSouhaitee[1]-1;
+
+    directionsPossible[HAUT_MILIEU][0] = caseSouhaitee[0];
+    directionsPossible[HAUT_MILIEU][1] = caseSouhaitee[1]-1;
+
+    directionsPossible[HAUT_DROIT][0] = caseSouhaitee[0]+1;
+    directionsPossible[HAUT_DROIT][1] = caseSouhaitee[1]-1;
+
+    directionsPossible[MILIEU_GAUCHE][0] = caseSouhaitee[0]-1;
+    directionsPossible[MILIEU_GAUCHE][1] = caseSouhaitee[1];
+
+    directionsPossible[MILIEU_DROIT][0] = caseSouhaitee[0]+1;
+    directionsPossible[MILIEU_DROIT][1] = caseSouhaitee[1];
+
+    directionsPossible[BAS_GAUCHE][0] = caseSouhaitee[0]-1;
+    directionsPossible[BAS_GAUCHE][1] = caseSouhaitee[1]+1;
+
+    directionsPossible[BAS_MILIEU][0] = caseSouhaitee[0];
+    directionsPossible[BAS_MILIEU][1] = caseSouhaitee[1]+1;
+
+    directionsPossible[BAS_DROIT][0] = caseSouhaitee[0]+1;
+    directionsPossible[BAS_DROIT][1] = caseSouhaitee[1]+1;
+
+
+    if(couleurJoueur == 'b'){
+        couleurAdversaire = 'n';
+    }else{
+        couleurAdversaire = 'b';
+    }
+
+    for(int i=0; i<8;i++){
+        if(plateau[directionsPossible[i][1]][directionsPossible[i][0]] == couleurAdversaire){
+            int count = 0;
+
+            switch (i)
+            {
+            case HAUT_GAUCHE:
+                do{
+                    count++;
+                }while(plateau[directionsPossible[i][1]-count][directionsPossible[i][0]-count] == couleurAdversaire);
+
+                if(plateau[directionsPossible[i][1]-count][directionsPossible[i][0]-count] == couleurJoueur){
+                    coupValide = true;
                 }
+                break;
+
+            case HAUT_MILIEU:
+                do{
+                    count++;
+                }while(plateau[directionsPossible[i][1]-count][directionsPossible[i][0]] == couleurAdversaire);
+
+                if(plateau[directionsPossible[i][1]-count][directionsPossible[i][0]] == couleurJoueur){
+                    coupValide = true;
+                }
+                break;
+
+            case HAUT_DROIT:
+                do{
+                    count++;
+                }while(plateau[directionsPossible[i][1]-count][directionsPossible[i][0]+count] == couleurAdversaire);
+
+                if(plateau[directionsPossible[i][1]-count][directionsPossible[i][0]+count] == couleurJoueur){
+                    coupValide = true;
+                }
+                break;
+
+            case MILIEU_GAUCHE:
+                do{
+                    count++;
+                }while(plateau[directionsPossible[i][1]][directionsPossible[i][0]-count] == couleurAdversaire);
+                
+                if(plateau[directionsPossible[i][1]][directionsPossible[i][0]-count] == couleurJoueur){
+                    coupValide = true;
+                }
+                break;
+
+            case MILIEU_DROIT:
+                do{
+                    count++;
+                }while(plateau[directionsPossible[i][1]][directionsPossible[i][0]+count] == couleurAdversaire);
+                
+                if(plateau[directionsPossible[i][1]][directionsPossible[i][0]+count] == couleurJoueur){
+                    coupValide = true;
+                }
+                break;
+
+            case BAS_GAUCHE:
+                do{
+                    count++;
+                }while(plateau[directionsPossible[i][1]+count][directionsPossible[i][0]-count] == couleurAdversaire);
+                
+                if(plateau[directionsPossible[i][1]+count][directionsPossible[i][0]-count] == couleurJoueur){
+                    coupValide = true;
+                }
+                break;
+
+            case BAS_MILIEU:
+                do{
+                    count++;
+                }while(plateau[directionsPossible[i][1]+count][directionsPossible[i][0]] == couleurAdversaire);
+                
+                if(plateau[directionsPossible[i][1]+count][directionsPossible[i][0]] == couleurJoueur){
+                    coupValide = true;
+                }
+                break;
+
+            case BAS_DROIT:
+                do{
+                    count++;
+                }while(plateau[directionsPossible[i][1]+count][directionsPossible[i][0]+count] == couleurAdversaire);
+                
+                if(plateau[directionsPossible[i][1]+count][directionsPossible[i][0]+count] == couleurJoueur){
+                    coupValide = true;
+                }
+                break;
+
+            default:
+                cout << "error" << endl;
+                break;
             }
-
-            if (plateau[coorCase[1]-1][coorCase[0]-1] == 'n'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]-1-i][coorCase[0]-1-i] == 'b') jetonEntoure=true;
-                }
-            }
-
-            if (plateau[coorCase[1]][coorCase[0]-1] == 'n'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]][coorCase[0]-1-i] == 'b') jetonEntoure=true;
-                }
-            }
-
-            if (plateau[coorCase[1]+1][coorCase[0]-1] == 'n'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]+1+i][coorCase[0]-1-i] == 'b') jetonEntoure=true;
-                }
-            } 
-
-            if (plateau[coorCase[1]+1][coorCase[0]] == 'n'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]+1+i][coorCase[0]] == 'b') jetonEntoure=true;
-                } 
-            } 
-
-            if (plateau[coorCase[1]+1][coorCase[0]+1] == 'n'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]+1+i][coorCase[0]-1+i] == 'b') jetonEntoure=true;
-                }  
-            } 
-
-            if (plateau[coorCase[1]][coorCase[0]+1] == 'n'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]][coorCase[0]+1+i] == 'b') jetonEntoure=true;
-                }
-            }  
-
-            if (plateau[coorCase[1]-1][coorCase[0]+1] == 'n'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]-1-i][coorCase[0]+1+i] == 'b') jetonEntoure=true;
-                }
-            }
-
-            break;  
-
-        case 'n':
-                    if (plateau[coorCase[1]-1][coorCase[0]] == 'b'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]-1-i][coorCase[0]] == 'n') jetonEntoure=true;
-                }
-            }
-            
-            if (plateau[coorCase[1]-1][coorCase[0]-1] == 'b'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]-1-i][coorCase[0]-1-i] == 'n') jetonEntoure=true;
-                }
-            }
-
-            if (plateau[coorCase[1]][coorCase[0]-1] == 'b'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]][coorCase[0]-1-i] == 'n') jetonEntoure=true;
-                }
-            }
-
-            if (plateau[coorCase[1]+1][coorCase[0]-1] == 'b'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]+1+i][coorCase[0]-1-i] == 'n') jetonEntoure=true;
-                }
-            } 
-
-            if (plateau[coorCase[1]+1][coorCase[0]] == 'b'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]+1+i][coorCase[0]] == 'n') jetonEntoure=true;
-                } 
-            } 
-
-            if (plateau[coorCase[1]+1][coorCase[0]+1] == 'b'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]+1+i][coorCase[0]-1+i] == 'n') jetonEntoure=true;
-                }  
-            } 
-
-            if (plateau[coorCase[1]][coorCase[0]+1] == 'b'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]][coorCase[0]+1+i] == 'n') jetonEntoure=true;
-                }
-            }  
-
-            if (plateau[coorCase[1]-1][coorCase[0]+1] == 'b'){
-                for (int i=0; i<8; i++){
-                    if(plateau[coorCase[1]-1-i][coorCase[0]+1+i] == 'n') jetonEntoure=true;
-                }
-            } 
-            break;
         }
-        return jetonEntoure;
+    }
+
+    return coupValide;
 }
 
 void convertCoordonnees(char saisieUt[2], int coorCase[2]){

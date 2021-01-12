@@ -1,6 +1,16 @@
 #ifndef MODELE_H
 #define MODELE_H
 
+const int HAUT_GAUCHE = 0;
+const int HAUT_MILIEU = 1;
+const int HAUT_DROIT = 2;
+const int MILIEU_GAUCHE = 3;
+const int MILIEU_DROIT = 4;
+const int BAS_GAUCHE = 5;
+const int BAS_MILIEU = 6;
+const int BAS_DROIT = 7;
+
+
 typedef struct Jeton{
     char couleur; //'b' = blanc, 'n' = noir
     int coordonnees[2]; // abscisse, ordonné
