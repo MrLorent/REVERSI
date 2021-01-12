@@ -34,10 +34,7 @@ int main(){
         cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
         do{
             cin >> saisieUt;
-        }while(verifSaisie(leJeu.plateau, saisieUt, casePrise) != 0);
-            if(verifPlacement(leJeu.plateau,casePrise, leJeu.joueurCourant)==false) {
-                cout << 'Erreur: il faut entourer un pion adverse pour pouvoir placer le votre. \n';
-            }
+        }while(verifSaisie(leJeu.plateau, saisieUt, casePrise, leJeu.joueurCourant->couleur) != 0);
         cout << casePrise[0] << endl;
         cout << casePrise[1] << endl;
 
@@ -51,7 +48,7 @@ int main(){
     return 0;
 }
 
-int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]){
+int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2], char couleurJoueur){
     // On traite le cas où les coordonnées sont saisies dans l'ordre inverse
     if((saisieUt[1] >= 'A' && saisieUt[1] <= 'H') || (saisieUt[1] >= 'a' && saisieUt[1] <= 'h')){
         int tmp;
@@ -75,14 +72,20 @@ int verifSaisie(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coor
             cout << "Veuillez saisir une nouvelle case :" << endl;
             return 1;
         }else{
-            return 0;
+            if(verifPlacement(plateau, coorCase, couleurJoueur)){
+                return 0;
+            }else{
+                cout << "Placement incorrect" << endl;
+                return 1;
+            }
+            
         }
     }
 }
 
-bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int coorCase[2], Joueur * joueurCourant ){
+bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int coorCase[2], char couleurJoueur ){
     bool jetonEntoure=false;
-    switch (joueurCourant->couleur)
+    switch (couleurJoueur)
         {
         case 'b':
             
@@ -186,7 +189,7 @@ bool verifPlacement(char plateau[MAXLARGEUR][MAXLARGEUR], int coorCase[2], Joueu
             } 
             break;
         }
-    if (jetonEntoure) {return true;}
+        return jetonEntoure;
 }
 
 void convertCoordonnees(char saisieUt[2], int coorCase[2]){
