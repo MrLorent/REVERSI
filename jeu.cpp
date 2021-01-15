@@ -30,6 +30,7 @@ void initJeu(Jeu * unJeu){
 
 	// Initialisation du joueur courant
 	unJeu->joueurCourant = &unJeu->joueur1;
+	unJeu->joueurEnAttente = &unJeu->joueur2;
 
 	// Initialisation du plateau de jeu
 	initPlateau(unJeu->plateau);
@@ -44,7 +45,9 @@ void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]){
 void changeJoueurCourant(Jeu * unJeu){
 	if(strcmp(unJeu->joueurCourant->nom, (*unJeu).joueur1.nom) == 0 ){
 		unJeu->joueurCourant = &unJeu->joueur2;
+		unJeu->joueurEnAttente = &unJeu->joueur1;
 	}else{
 		unJeu->joueurCourant = &unJeu->joueur1;
+		unJeu->joueurEnAttente = &unJeu->joueur2;
 	}
 }

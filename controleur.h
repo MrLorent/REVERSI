@@ -11,9 +11,9 @@ void ajouteJetonPlateau(Joueur unJoueur, char lePlateau[MAXLARGEUR][MAXLARGEUR])
 void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton);
 
 // MAIN
-bool saisieCorrecte(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2], char couleurJoueur);
-bool placementValide(char plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2], char couleurJoueur );
-bool jetonCapture(char plateau[MAXLARGEUR][MAXLARGEUR], int caseCourante[2], int uneDirection, int coorJetonsPris[8][2], int * count, char couleurJoueur, char couleurAdversaire);
+bool saisieCorrecte(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]);
+bool captureJeton(char plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire);
+bool directionValide(char plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int coorJetonsPris[8][2], int * count, char couleurAdversaire, char objectif);
 void convertCoordonnees(char saisieUt[2], int saisieTraduite[2]);
 
 #endif

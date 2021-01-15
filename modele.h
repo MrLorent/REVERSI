@@ -39,6 +39,7 @@ typedef struct Jeu{
     Joueur joueur1;
     Joueur joueur2;
     Joueur * joueurCourant;
+    Joueur * joueurEnAttente;
     char plateau[MAXLARGEUR][MAXLARGEUR];
 }Jeu;
 
