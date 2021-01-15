@@ -16,6 +16,9 @@ int main(){
     initJeu(&leJeu);
     
     do{
+        int nbCoupsJouables = 0;
+        int coupsJouables[10][2];
+
         // DÉBUT DU TOUR
         // Affichage des informations sur le joueur courant
         //system("cls");
@@ -25,8 +28,11 @@ int main(){
         cout << "Joueur en attente: " << leJeu.joueurEnAttente->nom << endl;
 
         // Mise à jour des données du plateau
+        initPlateau(leJeu.plateau);
         ajouteJetonPlateau(leJeu.joueur1, leJeu.plateau);
         ajouteJetonPlateau(leJeu.joueur2, leJeu.plateau);
+        analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, coupsJouables, &nbCoupsJouables);
+        ajouteCoupsJouablesPlateau(leJeu.plateau, coupsJouables, nbCoupsJouables);
         
         // Affichage du plateau
         affichePlateau(leJeu.plateau);
@@ -38,10 +44,12 @@ int main(){
         }while(!saisieCorrecte(leJeu.plateau, saisieUt, casePrise) || !captureJeton(leJeu.plateau, casePrise, leJeu.joueurCourant, leJeu.joueurEnAttente));
 
         // FIN DU TOUR
-        initJeton(&nouveauJeton, leJeu.joueurCourant->couleur, casePrise);
-        ajouteJetonJoueur(leJeu.joueurCourant, nouveauJeton);
+        ajouteJetonJoueur(leJeu.joueurCourant, casePrise);
         // Passage au tour suivant
         changeJoueurCourant(&leJeu);
+        if(leJeu.joueur1.nbJeton + leJeu.joueur2.nbJeton == 64){
+            partieTerminee = true;
+        }
     }while(!partieTerminee);
 
     return 0;
@@ -66,74 +74,12 @@ bool saisieCorrecte(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int 
         // Dans un second temps, on traduit l'entrée utilisateur en coordonnées pour vérifier si la case est disponible
         convertCoordonnees(saisieUt, coorCase);
         // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
-        if(plateau[coorCase[1]][coorCase[0]] != 'v'){
+        if(plateau[coorCase[1]][coorCase[0]] != 'v' && plateau[coorCase[1]][coorCase[0]] != 'j'){
             cout << "Erreur: la case saisie est déjà occupée." << endl;
             cout << "Veuillez saisir une nouvelle case :" << endl;
             return false;
         }else{
             return true;
-        }
-    }
-}
-
-bool captureJeton(char plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){
-    bool coupValide = false;
-
-    for(int i=0; i<8;i++){
-        if(plateau[caseSouhaitee[1]+VECTEURS[i][1]][caseSouhaitee[0]+VECTEURS[i][0]] == adversaire->couleur){
-            // count servira lorsque l'on voudra voir quel coup capture le plus de jeton pour l'IA 
-            int nbJetonsPris = 0;
-            int coorJetonsPris[8][2];
-
-            if(directionValide(plateau, caseSouhaitee, i, coorJetonsPris, &nbJetonsPris, adversaire->couleur, joueurCourant->couleur)){
-                coupValide = true;
-                for(int i=0;i<nbJetonsPris;i++){
-                    int count = 0;
-                    bool transfere = false;
-
-                    while(count < adversaire->nbJeton && !transfere){
-                        if(adversaire->listeJetons[count].coordonnees[0] == coorJetonsPris[i][0] && adversaire->listeJetons[count].coordonnees[1] == coorJetonsPris[i][1]){
-                            adversaire->listeJetons[count] = adversaire->listeJetons[adversaire->nbJeton - 1];
-                            adversaire->nbJeton = adversaire->nbJeton -1;
-
-                            Jeton nouveauJeton;
-                            initJeton(&nouveauJeton, joueurCourant->couleur,coorJetonsPris[i]);
-                            ajouteJetonJoueur(joueurCourant, nouveauJeton);
-                            transfere = true;
-                        }
-                        count++;
-                    }
-                }
-            }
-        }
-    }
-
-    if(!coupValide){
-        cout << "Erreur: vous devez prendre possession d'un moins un jeton adverse." << endl;
-        cout << "Veuillez saisir une nouvelle case :" << endl;
-    }
-
-    return coupValide;
-}
-
-bool directionValide(char plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int coorJetonsPris[8][2], int * count, char couleurAdversaire, char objectif){
-    char contenuCaseSuivante;
-    int caseSuivante[2];
-    
-    contenuCaseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
-    caseSuivante[0] = caseDepart[0] + VECTEURS[uneDirection][0];
-    caseSuivante[1] = caseDepart[1] + VECTEURS[uneDirection][1];
-
-    if(contenuCaseSuivante == couleurAdversaire){
-        coorJetonsPris[*count][0] = caseSuivante[0];
-        coorJetonsPris[*count][1] = caseSuivante[1];
-        (*count)++;
-        return directionValide(plateau, caseSuivante, uneDirection, coorJetonsPris, count, couleurAdversaire, objectif);
-    }else{
-        if(contenuCaseSuivante == objectif){
-            return true;
-        }else{
-            return false;
         }
     }
 }

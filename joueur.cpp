@@ -19,6 +19,14 @@ void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton){
 	(unJoueur->nbJeton)++;
 }
 
+void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
+	Jeton unJeton;
+	initJeton(&unJeton, unJoueur->couleur, coordonnees);
+	
+	unJoueur->listeJetons[unJoueur->nbJeton] = unJeton;
+	(unJoueur->nbJeton)++;
+}
+
 void afficheJoueur(Joueur joueur){
 	cout << "AFFICHAGE DES INFORMATIONS D'UN JOUEUR" << endl;
 	cout << "Nom: " << joueur.nom << endl;

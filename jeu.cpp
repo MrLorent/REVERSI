@@ -7,26 +7,21 @@
 using namespace std;
 
 void initJeu(Jeu * unJeu){
-	Jeton jetonBlanc1, jetonBlanc2, jetonNoir1, jetonNoir2;
 	int coor1[2]={3,3}, coor2[2]={4,4}, coor3[2]={3,4}, coor4[2]={4,3};
 
 	// Initialisation du premier joueur et de ses deux premiers jetons
 	cout << endl;
 	cout << "ENREGISTREMENT DU PREMIER JOUEUR :" << endl;
 	initJoueur(&unJeu->joueur1, 'b');
-	initJeton(&jetonBlanc1, unJeu->joueur1.couleur, coor1);
-	ajouteJetonJoueur(&unJeu->joueur1, jetonBlanc1);
-	initJeton(&jetonBlanc2, unJeu->joueur1.couleur, coor2);
-	ajouteJetonJoueur(&unJeu->joueur1, jetonBlanc2);
+	ajouteJetonJoueur(&unJeu->joueur1, coor1);
+	ajouteJetonJoueur(&unJeu->joueur1, coor2);
 
 	// Initialisation du second joueur et de ses deux premiers jetons
 	cout << endl;
 	cout << "ENREGISTREMENT DU SECOND JOUEUR :" << endl;
     initJoueur(&unJeu->joueur2, 'n');
-	initJeton(&jetonNoir1, unJeu->joueur2.couleur, coor3);
-	ajouteJetonJoueur(&unJeu->joueur2, jetonNoir1);
-	initJeton(&jetonNoir2, unJeu->joueur2.couleur, coor4);
-	ajouteJetonJoueur(&unJeu->joueur2, jetonNoir2);
+	ajouteJetonJoueur(&unJeu->joueur2, coor3);
+	ajouteJetonJoueur(&unJeu->joueur2, coor4);
 
 	// Initialisation du joueur courant
 	unJeu->joueurCourant = &unJeu->joueur1;
