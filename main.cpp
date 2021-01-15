@@ -28,11 +28,8 @@ int main(){
         cout << "Joueur en attente: " << leJeu.joueurEnAttente->nom << endl;
 
         // Mise à jour des données du plateau
-        initPlateau(leJeu.plateau);
-        ajouteJetonPlateau(leJeu.joueur1, leJeu.plateau);
-        ajouteJetonPlateau(leJeu.joueur2, leJeu.plateau);
-        analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, coupsJouables, &nbCoupsJouables);
-        ajouteCoupsJouablesPlateau(leJeu.plateau, coupsJouables, nbCoupsJouables);
+        ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
+        ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
         
         // Affichage du plateau
         affichePlateau(leJeu.plateau);
@@ -44,7 +41,9 @@ int main(){
         }while(!saisieCorrecte(leJeu.plateau, saisieUt, casePrise) || !captureJeton(leJeu.plateau, casePrise, leJeu.joueurCourant, leJeu.joueurEnAttente));
 
         // FIN DU TOUR
-        ajouteJetonJoueur(leJeu.joueurCourant, casePrise);
+        Jeton nouveauJeton;
+        initJeton(&nouveauJeton, leJeu.joueurCourant->couleur, casePrise);
+        ajouteJetonJoueur(leJeu.joueurCourant, nouveauJeton);
         // Passage au tour suivant
         changeJoueurCourant(&leJeu);
         if(leJeu.joueur1.nbJeton + leJeu.joueur2.nbJeton == 64){
@@ -55,7 +54,7 @@ int main(){
     return 0;
 }
 
-bool saisieCorrecte(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]){
+bool saisieCorrecte(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]){
     // On traite le cas où les coordonnées sont saisies dans l'ordre inverse
     if((saisieUt[1] >= 'A' && saisieUt[1] <= 'H') || (saisieUt[1] >= 'a' && saisieUt[1] <= 'h')){
         int tmp;
@@ -74,7 +73,7 @@ bool saisieCorrecte(char plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int 
         // Dans un second temps, on traduit l'entrée utilisateur en coordonnées pour vérifier si la case est disponible
         convertCoordonnees(saisieUt, coorCase);
         // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
-        if(plateau[coorCase[1]][coorCase[0]] != 'v' && plateau[coorCase[1]][coorCase[0]] != 'j'){
+        if(plateau[coorCase[1]][coorCase[0]] != NULL){
             cout << "Erreur: la case saisie est déjà occupée." << endl;
             cout << "Veuillez saisir une nouvelle case :" << endl;
             return false;

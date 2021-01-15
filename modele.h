@@ -40,7 +40,7 @@ typedef struct Jeu{
     Joueur joueur2;
     Joueur * joueurCourant;
     Joueur * joueurEnAttente;
-    char plateau[MAXLARGEUR][MAXLARGEUR];
+    Jeton * plateau[MAXLARGEUR][MAXLARGEUR];
 }Jeu;
 
 // JEU
@@ -48,7 +48,7 @@ void initJeu(Jeu * unJeu);
 void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]);
 
 // PLATEAU
-void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
+void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]);
 
 // JOUEUR
 void initJoueur(Joueur * unJoueur, char uneCouleur);
