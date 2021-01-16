@@ -58,3 +58,15 @@ void changeJoueurCourant(Jeu * unJeu){
 		unJeu->joueurEnAttente = &unJeu->joueur2;
 	}
 }
+
+void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement){
+	CoupJouable * nouveauCoup = new CoupJouable;
+	nouveauCoup->emplacement = emplacement;
+		
+	if(liste != NULL){
+		nouveauCoup->suivant = *liste;
+	}else{
+		nouveauCoup->suivant = NULL;
+	}
+	*liste = nouveauCoup;
+}

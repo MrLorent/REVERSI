@@ -27,6 +27,11 @@ typedef struct Jeton{
     int coordonnees[2]; // abscisse, ordonné
 }Jeton, Marqueur;
 
+typedef struct CoupJouable{
+    Marqueur * emplacement;
+    struct CoupJouable * suivant;
+}CoupJouable, *ListeCoupsJouables;
+
 typedef struct Joueur{
     char nom[20];
     char couleur;

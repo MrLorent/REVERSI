@@ -12,12 +12,11 @@ int main(){
     char saisieUt[2];
     int casePrise[2];
     bool partieTerminee = false;
+    ListeCoupsJouables coupsJouables = NULL;
 
     initJeu(&leJeu);
     
     do{
-        int nbCoupsJouables = 0;
-        int coupsJouables[10][2];
 
         // DÉBUT DU TOUR
         // Affichage des informations sur le joueur courant
@@ -29,8 +28,8 @@ int main(){
         // Mise à jour des données du plateau
         ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
         ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
-        analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, coupsJouables, &nbCoupsJouables);
-        ajouteCoupsJouablesPlateau(leJeu.plateau, coupsJouables, nbCoupsJouables);
+        analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &coupsJouables);
+        ajouteCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
         
         // Affichage du plateau
         affichePlateau(leJeu.plateau);
@@ -42,8 +41,8 @@ int main(){
         }while(!saisieCorrecte(leJeu.plateau, saisieUt, casePrise) || !captureJeton(leJeu.plateau, casePrise, leJeu.joueurCourant, leJeu.joueurEnAttente));
 
         // FIN DU TOUR
-        free(leJeu.plateau[casePrise[1]][casePrise[0]]);
-        retireCoupsJouablesPlateau(leJeu.plateau, coupsJouables, nbCoupsJouables);
+        //free(leJeu.plateau[casePrise[1]][casePrise[0]]);
+        retireCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
         ajouteJetonJoueur(leJeu.joueurCourant, casePrise);
         // Passage au tour suivant
         changeJoueurCourant(&leJeu);
