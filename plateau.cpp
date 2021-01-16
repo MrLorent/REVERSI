@@ -168,8 +168,10 @@ void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCo
     }
 }
 
-void analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables){
+bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables){
     int positionJeton[2];
+    bool unCoupJouable = false;
+
     for(int i = 0; i < joueurCourant->nbJeton; i++){
         positionJeton[0] = joueurCourant->listeJetons[i].coordonnees[0];
         positionJeton[1] = joueurCourant->listeJetons[i].coordonnees[1];
@@ -180,12 +182,15 @@ void analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
             int count = 0;
 
             if(directionJouable(plateau, positionJeton, j, &count, adversaire->couleur, 'v')){
+                unCoupJouable = true;
                 count++;
                 enregistreCoupJouable(coupsJouables, plateau[positionJeton[1]+VECTEURS[j][1]*count][positionJeton[0]+VECTEURS[j][0]*count]);
                 }
             }
         }
     }
+
+    return unCoupJouable;
 }
 
 bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int * count, char couleurAdversaire, char objectif){

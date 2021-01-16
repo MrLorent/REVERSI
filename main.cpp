@@ -9,6 +9,7 @@ using namespace std;
 int main(){
     Jeu leJeu;
     Jeton nouveauJeton;
+    int toursPasses = 0;
     char saisieUt[2];
     int casePrise[2];
     bool partieTerminee = false;
@@ -28,28 +29,52 @@ int main(){
         // Mise à jour des données du plateau
         ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
         ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
-        analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &coupsJouables);
-        ajouteCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
-        
-        // Affichage du plateau
-        affichePlateau(leJeu.plateau);
+        if(analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &coupsJouables)){
+            ajouteCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
+            
+            // Affichage du plateau
+            affichePlateau(leJeu.plateau);
 
-        // DÉROULÉ DU TOUR
-        cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
-        do{
-            cin >> saisieUt;
-        }while(!saisieCorrecte(leJeu.plateau, saisieUt, casePrise) || !captureJeton(leJeu.plateau, casePrise, leJeu.joueurCourant, leJeu.joueurEnAttente));
+            // DÉROULÉ DU TOUR
+            cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
+            do{
+                cin >> saisieUt;
+            }while(!saisieCorrecte(leJeu.plateau, saisieUt, casePrise) || !captureJeton(leJeu.plateau, casePrise, leJeu.joueurCourant, leJeu.joueurEnAttente));
 
-        // FIN DU TOUR
-        //free(leJeu.plateau[casePrise[1]][casePrise[0]]);
-        retireCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
-        ajouteJetonJoueur(leJeu.joueurCourant, casePrise);
+            // FIN DU TOUR
+            toursPasses = 0;
+            retireCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
+            ajouteJetonJoueur(leJeu.joueurCourant, casePrise);
+            free(leJeu.plateau[casePrise[1]][casePrise[0]]);
+        }else{
+            char passerTour;
+            // Affichage du plateau
+            affichePlateau(leJeu.plateau);
+
+            do{
+                cout << "Malheureusement vous n'avaez aucun coup jouable..." << endl;
+                cout << "Passer au tour suivant ? (o/n)" << endl;
+                cin >> passerTour;
+            }while(passerTour != 'o');
+            toursPasses++;
+        }
         // Passage au tour suivant
         changeJoueurCourant(&leJeu);
-        if(leJeu.joueur1.nbJeton + leJeu.joueur2.nbJeton == 64){
+        if(leJeu.joueur1.nbJeton + leJeu.joueur2.nbJeton == 64 || toursPasses == 2){
             partieTerminee = true;
         }
     }while(!partieTerminee);
+
+    cout << "PARTIE TERMINÉE !" << endl;
+    if(leJeu.joueur1.nbJeton  > leJeu.joueur2.nbJeton){
+        cout << "Le grand gagnant est " << leJeu.joueur1.nom << " avec " << leJeu.joueur1.nbJeton << " jetons contre " << leJeu.joueur2.nbJeton << " ! Félicitations à lui !" << endl;
+    }else{
+        if(leJeu.joueur1.nbJeton  < leJeu.joueur2.nbJeton){
+            cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " ! Félicitations à lui !" << endl;
+        }else{
+            cout << "C'est un égalité ! Félicitaion à vous deux ! " << endl;
+        }
+    }
 
     return 0;
 }
