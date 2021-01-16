@@ -6,11 +6,12 @@
 
 using namespace std;
 
-void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
+void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     // Initialisation de chaque case à "vide"
     for(int l=0;l<MAXLARGEUR;l++){
         for(int c=0;c<MAXLARGEUR;c++){
-            plateau[l][c]='v';
+            plateau[l][c]= new Marqueur;
+            
         }
     }
 }
