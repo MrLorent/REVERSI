@@ -6,7 +6,7 @@
 // JEU
 
 // PLATEAU
-void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]);
+void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]);
 void afficheLigneTransition();
 
 //JOUEUR

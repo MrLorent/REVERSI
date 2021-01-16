@@ -46,6 +46,7 @@ typedef struct Jeu{
 // JEU
 void initJeu(Jeu * unJeu);
 void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]);
+void initMarqueur(Marqueur * unMarqueur, int coordonnees[2]);
 
 // PLATEAU
 void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]);

@@ -7,23 +7,24 @@
 using namespace std;
 
 void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
-    // Initialisation de chaque case à "vide"
+    // Chaque case est remplie d'un marqueur indiquant que la case est "vide"
     for(int l=0;l<MAXLARGEUR;l++){
         for(int c=0;c<MAXLARGEUR;c++){
             plateau[l][c]= new Marqueur;
-            
+            int coor[2] = {c , l};
+            initMarqueur(plateau[l][c], coor);
         }
     }
 }
 
-void ajouteJetonPlateau(Joueur unJoueur, char lePlateau[MAXLARGEUR][MAXLARGEUR]){
-    for(int i=0; i < unJoueur.nbJeton; i++){
+void ajouteJetonPlateau(Joueur * unJoueur, Jeton * lePlateau[MAXLARGEUR][MAXLARGEUR]){
+    for(int i=0; i < unJoueur->nbJeton; i++){
         // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
-        lePlateau[unJoueur.listeJetons[i].coordonnees[1]][unJoueur.listeJetons[i].coordonnees[0]] = unJoueur.listeJetons[i].couleur;
+        lePlateau[unJoueur->listeJetons[i].coordonnees[1]][unJoueur->listeJetons[i].coordonnees[0]] = &(unJoueur->listeJetons[i]);
     }
 }
 
-void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
+void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     const char tabLettres[MAXLARGEUR] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
     const char tabChiffres[MAXLARGEUR] = { '1', '2', '3', '4', '5', '6', '7', '8' };
 
@@ -46,16 +47,16 @@ void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
         //on affiche le numéro de ligne
         cout << " " << tabChiffres[l] << " |";
         for(int c=0; c < MAXLARGEUR; c++){
-            switch (plateau[l][c])
+            switch (plateau[l][c]->couleur)
             {
             case 'b':
-                cout << " * |";
+                cout << " X |";
                 break;
             case 'n':
-                cout << " 0 |";
+                cout << " O |";
                 break;
             case 'j':
-                cout << " # |";
+                cout << " * |";
                 break;
             default:
                 cout << "   |";
@@ -77,11 +78,11 @@ void afficheLigneTransition(){
     cout << "+---+" << endl;
 }
 
-bool captureJeton(char plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){
+bool captureJeton(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){
     bool coupValide = false;
 
     for(int i=0; i<8;i++){
-        if(plateau[caseSouhaitee[1]+VECTEURS[i][1]][caseSouhaitee[0]+VECTEURS[i][0]] == adversaire->couleur){
+        if(plateau[caseSouhaitee[1]+VECTEURS[i][1]][caseSouhaitee[0]+VECTEURS[i][0]]->couleur == adversaire->couleur){
             // count servira lorsque l'on voudra voir quel coup capture le plus de jeton pour l'IA 
             int nbJetonsPris = 0;
             int coorJetonsPris[8][2];
@@ -115,21 +116,21 @@ bool captureJeton(char plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2], Jo
     return coupValide;
 }
 
-bool directionValide(char plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int coorJetonsPris[8][2], int * count, char couleurAdversaire, char objectif){
-    char contenuCaseSuivante;
+bool directionValide(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int coorJetonsPris[8][2], int * count, char couleurAdversaire, char objectif){
+    Jeton * contenuCaseSuivante;
     int caseSuivante[2];
     
     contenuCaseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
     caseSuivante[0] = caseDepart[0] + VECTEURS[uneDirection][0];
     caseSuivante[1] = caseDepart[1] + VECTEURS[uneDirection][1];
 
-    if(contenuCaseSuivante == couleurAdversaire){
+    if(contenuCaseSuivante->couleur == couleurAdversaire){
         coorJetonsPris[*count][0] = caseSuivante[0];
         coorJetonsPris[*count][1] = caseSuivante[1];
         (*count)++;
         return directionValide(plateau, caseSuivante, uneDirection, coorJetonsPris, count, couleurAdversaire, objectif);
     }else{
-        if(contenuCaseSuivante == objectif){
+        if(contenuCaseSuivante->couleur == objectif){
             return true;
         }else{
             return false;
@@ -137,20 +138,28 @@ bool directionValide(char plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], in
     }
 }
 
-void ajouteCoupsJouablesPlateau(char plateau[MAXLARGEUR][MAXLARGEUR], int coupsJouables[10][2], int nbCoupsJouables){
+void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int coupsJouables[10][2], int nbCoupsJouables){
     for(int i=0; i < nbCoupsJouables; i++){
-        plateau[coupsJouables[i][1]][coupsJouables[i][0]] = 'j';
+        plateau[coupsJouables[i][1]][coupsJouables[i][0]]->couleur = 'j';
     }
 }
 
-void analyseCoupsJouables(char plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, int coupsJouables[10][2], int * nbCoupsJouables){
+void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int coupsJouables[10][2], int nbCoupsJouables){
+    for(int i=0; i < nbCoupsJouables; i++){
+        if(plateau[coupsJouables[i][1]][coupsJouables[i][0]]->couleur = 'j'){
+            plateau[coupsJouables[i][1]][coupsJouables[i][0]]->couleur = 'v';
+        }
+    }
+}
+
+void analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, int coupsJouables[10][2], int * nbCoupsJouables){
     int positionJeton[2];
     for(int i = 0; i < joueurCourant->nbJeton; i++){
         positionJeton[0] = joueurCourant->listeJetons[i].coordonnees[0];
         positionJeton[1] = joueurCourant->listeJetons[i].coordonnees[1];
 
         for(int j=0; j<8;j++){
-        if(plateau[positionJeton[1]+VECTEURS[j][1]][positionJeton[0]+VECTEURS[j][0]] == adversaire->couleur){
+        if(plateau[positionJeton[1]+VECTEURS[j][1]][positionJeton[0]+VECTEURS[j][0]]->couleur == adversaire->couleur){
             // count servira lorsque l'on voudra voir quel coup capture le plus de jeton pour l'IA 
             int count = 0;
             int coorJetonsPris[8][2];
