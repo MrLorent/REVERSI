@@ -87,42 +87,51 @@ bool directionValide(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2],
 
 bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables){
     Jeton * tmp = joueurCourant->listeJetons;
-    bool unCoupJouable = false;
 
     while(tmp != NULL){
-        for(int j=0; j<8;j++){
-            // count servira lorsque l'on voudra voir quel coup capture le plus de jeton pour l'IA 
-            int count = 0;
+        bool leCoupEstJouable = false;
+        Jeton * leCoupJouable = NULL;
+        ListeCaptures * jetonsCaptures = new ListeCaptures;
+        *jetonsCaptures = NULL;
 
-            if(caseExiste(tmp->coordonnees[0]+VECTEURS[j][0], tmp->coordonnees[1]+VECTEURS[j][1]) && plateau[tmp->coordonnees[1]+VECTEURS[j][1]][tmp->coordonnees[0]+VECTEURS[j][0]]->couleur == adversaire->couleur){
+        for(int direction=0; direction<8;direction++){
+            if(caseExiste(tmp->coordonnees[0]+VECTEURS[direction][0], tmp->coordonnees[1]+VECTEURS[direction][1]) && plateau[tmp->coordonnees[1]+VECTEURS[direction][1]][tmp->coordonnees[0]+VECTEURS[direction][0]]->couleur == adversaire->couleur){
+                int count = 0;
 
-                if(directionJouable(plateau, tmp->coordonnees, j, &count, adversaire->couleur, 'v')){
-                    unCoupJouable = true;
-                    count++;
-                    enregistreCoupJouable(coupsJouables, plateau[tmp->coordonnees[1]+VECTEURS[j][1]*count][tmp->coordonnees[0]+VECTEURS[j][0]*count]);
+                if(directionJouable(plateau, tmp->coordonnees, direction, jetonsCaptures, &count, adversaire->couleur, 'v')){
+                    leCoupEstJouable = true;
+                    leCoupJouable = plateau[tmp->coordonnees[1]+VECTEURS[direction][1]*(count+1)][tmp->coordonnees[0]+VECTEURS[direction][0]*(count+1)];
+                    enregistreCoupJouable(coupsJouables, leCoupJouable, jetonsCaptures, count);
                 }
             }
         }
+        cout << "là c'est ok" << endl;
         tmp = tmp->suivant;
     }
-
-    return unCoupJouable;
+    cout << "c'est ok" << endl;
+    if(coupsJouables != NULL){
+        return true;
+    }else{
+        return false;
+    }
+    
 }
 
-bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int * count, char couleurAdversaire, char objectif){
-    Jeton * contenuCaseSuivante;
-    int caseSuivante[2];
+bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, ListeCaptures * jetonsCaptures, int * count, char couleurAdversaire, char objectif){
+    Jeton * caseSuivante;
+    int coorCaseSuivante[2];
     
     if(caseExiste(caseDepart[0] + VECTEURS[uneDirection][0], caseDepart[1] + VECTEURS[uneDirection][1])){
-        contenuCaseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
-        caseSuivante[0] = caseDepart[0] + VECTEURS[uneDirection][0];
-        caseSuivante[1] = caseDepart[1] + VECTEURS[uneDirection][1];
+        caseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
+        coorCaseSuivante[0] = caseDepart[0] + VECTEURS[uneDirection][0];
+        coorCaseSuivante[1] = caseDepart[1] + VECTEURS[uneDirection][1];
 
-        if(contenuCaseSuivante->couleur == couleurAdversaire){
+        if(caseSuivante->couleur == couleurAdversaire){
+            ajouteJetonCapture(jetonsCaptures, caseSuivante);
             (*count)++;
-            return directionJouable(plateau, caseSuivante, uneDirection, count, couleurAdversaire, objectif);
+            return directionJouable(plateau, coorCaseSuivante, uneDirection, jetonsCaptures, count, couleurAdversaire, objectif);
         }else{
-            if(contenuCaseSuivante->couleur == objectif){
+            if(caseSuivante->couleur == objectif){
                 return true;
             }else{
                 return false;
@@ -137,6 +146,7 @@ void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCo
     CoupJouable * tmp = *coupsJouables;
 
     while(tmp != NULL){
+        cout << "nbCaptures: " << tmp->nbCaptures << endl;
         tmp->emplacement->couleur = 'j';
         tmp = tmp->suivant;
     }

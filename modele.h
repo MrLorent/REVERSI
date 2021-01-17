@@ -28,8 +28,15 @@ typedef struct Jeton{
     struct Jeton * suivant;
 }Jeton, Marqueur, *ListeJetons, *ListeMarqueurs;
 
+typedef struct Capture{
+    Jeton * jeton;
+    struct Capture * suivant;
+}Capture, *ListeCaptures;
+
 typedef struct CoupJouable{
     Marqueur * emplacement;
+    ListeCaptures captures;
+    int nbCaptures;
     struct CoupJouable * suivant;
 }CoupJouable, *ListeCoupsJouables;
 

@@ -54,14 +54,72 @@ void changeJoueurCourant(Jeu * unJeu){
 	}
 }
 
-void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement){
-	CoupJouable * nouveauCoup = new CoupJouable;
-	nouveauCoup->emplacement = emplacement;
+void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, ListeCaptures * captures, int nbCaptures){
+	if(dejaEnregistre(liste, *emplacement)){
+		CoupJouable * tmp = *liste;
+		while(tmp != NULL){
+			if((tmp)->emplacement->coordonnees[0] == emplacement->coordonnees[0] && (tmp)->emplacement->coordonnees[1] == emplacement->coordonnees[1]){
+				concatCaptures(&(tmp->captures), captures);
+				tmp->nbCaptures = tmp->nbCaptures + nbCaptures;
+			}
+		tmp = tmp->suivant;
+		}
+	}else{
+		CoupJouable * nouveauCoup = new CoupJouable;
+		nouveauCoup->emplacement = emplacement;
+		nouveauCoup->captures = *captures;
+		nouveauCoup->nbCaptures = nbCaptures;
+			
+		if(liste != NULL){
+			nouveauCoup->suivant = *liste;
+		}else{
+			nouveauCoup->suivant = NULL;
+		}
+		*liste = nouveauCoup;
+	}
+}
+
+void ajouteJetonCapture(ListeCaptures * liste, Jeton * jetonCapture){
+	Capture * nouvelleCapture = new Capture;
+	nouvelleCapture->jeton = jetonCapture;
 		
 	if(liste != NULL){
-		nouveauCoup->suivant = *liste;
+		nouvelleCapture->suivant = *liste;
 	}else{
-		nouveauCoup->suivant = NULL;
+		nouvelleCapture->suivant = NULL;
 	}
-	*liste = nouveauCoup;
+	*liste = nouvelleCapture;
+}
+
+void videListe(ListeCaptures * uneListe){
+	Capture * tmp = *uneListe;
+
+	while(tmp != NULL){
+		*uneListe = (*uneListe)->suivant;
+		free(tmp);
+		tmp = *uneListe;
+	}
+}
+
+void concatCaptures(ListeCaptures * liste1, ListeCaptures * liste2){
+	Capture * tmp = *liste1;
+
+	while(tmp->suivant != NULL){
+		tmp = tmp->suivant;
+	}
+	tmp->suivant = *liste2;
+}
+
+bool dejaEnregistre(ListeCoupsJouables * coupsJouables, Marqueur emplacement){
+	bool termine = false, present = false;
+	CoupJouable * tmp = *coupsJouables;
+
+	while(tmp != NULL && !termine){
+		if((tmp)->emplacement->coordonnees[0] == emplacement.coordonnees[0] && (tmp)->emplacement->coordonnees[1] == emplacement.coordonnees[1]){
+			present = true;
+		}
+		tmp = tmp->suivant;
+	}
+
+	return present;
 }
