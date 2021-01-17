@@ -102,19 +102,19 @@ void videListe(ListeCaptures * uneListe){
 }
 
 void concatCaptures(ListeCaptures * liste1, ListeCaptures * liste2){
-	Capture * tmp = *liste1;
+	Capture * tmp = *liste2;
 
-	while(tmp->suivant != NULL){
+	while(tmp != NULL){
+		ajouteJetonCapture(liste1, tmp->jeton);
 		tmp = tmp->suivant;
 	}
-	tmp->suivant = *liste2;
 }
 
 bool dejaEnregistre(ListeCoupsJouables * coupsJouables, Marqueur emplacement){
-	bool termine = false, present = false;
+	bool present = false;
 	CoupJouable * tmp = *coupsJouables;
 
-	while(tmp != NULL && !termine){
+	while(tmp != NULL && !present){
 		if((tmp)->emplacement->coordonnees[0] == emplacement.coordonnees[0] && (tmp)->emplacement->coordonnees[1] == emplacement.coordonnees[1]){
 			present = true;
 		}

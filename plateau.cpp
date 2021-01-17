@@ -99,17 +99,21 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
                 int count = 0;
 
                 if(directionJouable(plateau, tmp->coordonnees, direction, jetonsCaptures, &count, adversaire->couleur, 'v')){
+                    cout << "if 2" << endl;
                     leCoupEstJouable = true;
                     leCoupJouable = plateau[tmp->coordonnees[1]+VECTEURS[direction][1]*(count+1)][tmp->coordonnees[0]+VECTEURS[direction][0]*(count+1)];
                     enregistreCoupJouable(coupsJouables, leCoupJouable, jetonsCaptures, count);
                 }
             }
         }
-        cout << "là c'est ok" << endl;
+        if(*jetonsCaptures != NULL){
+            videListe(jetonsCaptures);
+            free(jetonsCaptures);
+        }
+
         tmp = tmp->suivant;
     }
-    cout << "c'est ok" << endl;
-    if(coupsJouables != NULL){
+    if(*coupsJouables != NULL){
         return true;
     }else{
         return false;
