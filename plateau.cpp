@@ -31,58 +31,33 @@ bool caseExiste(int x, int y){
     return (x >= 0 && x <= 7) && (y >= 0 && y <= 7);
 }
 
-bool captureJeton(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){
+bool coupJouable(Jeu * leJeu, ListeCoupsJouables * coupsJouables, int caseSouhaitee[2]){
+    int rang = estEnregistre(coupsJouables, caseSouhaitee);
     bool coupValide = false;
+    
+    if(rang >= 0){
+        CoupJouable * tmp1 = *coupsJouables; 
 
-    for(int i=0; i<8;i++){
-        if(caseExiste(caseSouhaitee[0]+VECTEURS[i][0], caseSouhaitee[1]+VECTEURS[i][1])
-        && plateau[caseSouhaitee[1]+VECTEURS[i][1]][caseSouhaitee[0]+VECTEURS[i][0]]->couleur == adversaire->couleur){
-            // count servira lorsque l'on voudra voir quel coup capture le plus de jeton pour l'IA 
-            int nbJetonsPris = 0;
-            int coorJetonsPris[8][2];
+        coupValide = true;
 
-            if(directionValide(plateau, caseSouhaitee, i, coorJetonsPris, &nbJetonsPris, adversaire->couleur, joueurCourant->couleur)){
-                coupValide = true;
-                for(int i=0; i < nbJetonsPris; i++){
-                    supprimeJetonJoueur(adversaire, coorJetonsPris[i]);
-                    ajouteJetonJoueur(joueurCourant, coorJetonsPris[i]);
-                }
-            }
+        for(int i=0; i<rang-1; i++){
+            tmp1 = tmp1->suivant;
         }
-    }
 
-    if(!coupValide){
-        cout << "Erreur: vous devez prendre possession d'un moins un jeton adverse." << endl;
+        Capture * tmp2 = tmp1->captures;
+        while(tmp2 != NULL){
+            cout << "coorCaptures : x=" << tmp2->jeton->coordonnees[0] << " y=" << tmp2->jeton->coordonnees[1] << endl;
+            supprimeJetonJoueur(leJeu->joueurEnAttente, tmp2->jeton->coordonnees);
+            ajouteJetonJoueur(leJeu->joueurCourant, tmp2->jeton->coordonnees);
+            tmp2 = tmp2->suivant;
+        }
+        
+    }else{
+        cout << "Erreur: vous devez au moins capturer un jeton adverse." << endl;
         cout << "Veuillez saisir une nouvelle case :" << endl;
     }
 
     return coupValide;
-}
-
-bool directionValide(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int coorJetonsPris[8][2], int * count, char couleurAdversaire, char objectif){
-    Jeton * contenuCaseSuivante;
-    int caseSuivante[2];
-    
-    if(caseExiste(caseDepart[0] + VECTEURS[uneDirection][0], caseDepart[1] + VECTEURS[uneDirection][1])){
-        contenuCaseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
-        caseSuivante[0] = caseDepart[0] + VECTEURS[uneDirection][0];
-        caseSuivante[1] = caseDepart[1] + VECTEURS[uneDirection][1];
-
-        if(contenuCaseSuivante->couleur == couleurAdversaire){
-            coorJetonsPris[*count][0] = caseSuivante[0];
-            coorJetonsPris[*count][1] = caseSuivante[1];
-            (*count)++;
-            return directionValide(plateau, caseSuivante, uneDirection, coorJetonsPris, count, couleurAdversaire, objectif);
-        }else{
-            if(contenuCaseSuivante->couleur == objectif){
-                return true;
-            }else{
-                return false;
-            }
-        }
-    }else{
-        return false;
-    }
 }
 
 bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables){
@@ -99,10 +74,10 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
                 int count = 0;
 
                 if(directionJouable(plateau, tmp->coordonnees, direction, jetonsCaptures, &count, adversaire->couleur, 'v')){
-                    cout << "if 2" << endl;
                     leCoupEstJouable = true;
                     leCoupJouable = plateau[tmp->coordonnees[1]+VECTEURS[direction][1]*(count+1)][tmp->coordonnees[0]+VECTEURS[direction][0]*(count+1)];
                     enregistreCoupJouable(coupsJouables, leCoupJouable, jetonsCaptures, count);
+                    videListe(jetonsCaptures);
                 }
             }
         }
@@ -113,6 +88,7 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
 
         tmp = tmp->suivant;
     }
+
     if(*coupsJouables != NULL){
         return true;
     }else{

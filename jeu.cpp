@@ -55,7 +55,7 @@ void changeJoueurCourant(Jeu * unJeu){
 }
 
 void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, ListeCaptures * captures, int nbCaptures){
-	if(dejaEnregistre(liste, *emplacement)){
+	if(estEnregistre(liste, emplacement->coordonnees) >= 0){
 		CoupJouable * tmp = *liste;
 		while(tmp != NULL){
 			if((tmp)->emplacement->coordonnees[0] == emplacement->coordonnees[0] && (tmp)->emplacement->coordonnees[1] == emplacement->coordonnees[1]){
@@ -65,9 +65,14 @@ void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, L
 		tmp = tmp->suivant;
 		}
 	}else{
+		Capture * tmp = *captures;
 		CoupJouable * nouveauCoup = new CoupJouable;
 		nouveauCoup->emplacement = emplacement;
-		nouveauCoup->captures = *captures;
+		
+		while(tmp != NULL){
+			ajouteJetonCapture(&(nouveauCoup->captures), tmp->jeton);
+			tmp = tmp->suivant;
+		}
 		nouveauCoup->nbCaptures = nbCaptures;
 			
 		if(liste != NULL){
@@ -110,16 +115,21 @@ void concatCaptures(ListeCaptures * liste1, ListeCaptures * liste2){
 	}
 }
 
-bool dejaEnregistre(ListeCoupsJouables * coupsJouables, Marqueur emplacement){
+int estEnregistre(ListeCoupsJouables * coupsJouables, int coorEmplacement[2]){
+	int rang = 0;
 	bool present = false;
 	CoupJouable * tmp = *coupsJouables;
 
 	while(tmp != NULL && !present){
-		if((tmp)->emplacement->coordonnees[0] == emplacement.coordonnees[0] && (tmp)->emplacement->coordonnees[1] == emplacement.coordonnees[1]){
+		if((tmp)->emplacement->coordonnees[0] == coorEmplacement[0] && (tmp)->emplacement->coordonnees[1] == coorEmplacement[1]){
 			present = true;
 		}
+		rang++;
 		tmp = tmp->suivant;
 	}
-
-	return present;
+	if(present){
+		return rang;
+	}else{
+		return -1;
+	}
 }

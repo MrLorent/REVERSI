@@ -38,7 +38,7 @@ int main(){
             cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
             do{
                 cin >> saisieUt;
-            }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !captureJeton(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
+            }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu, &coupsJouables, coorSaisie));
 
             // FIN DU TOUR
             toursPasses = 0;
@@ -63,6 +63,10 @@ int main(){
             partieTerminee = true;
         }
     }while(!partieTerminee);
+
+    ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
+    ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
+    affichePlateau(leJeu.plateau);
 
     cout << "PARTIE TERMINÉE !" << endl;
     if(leJeu.joueur1.nbJeton  > leJeu.joueur2.nbJeton){
