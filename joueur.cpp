@@ -9,36 +9,50 @@ using namespace std;
 void initJoueur(Joueur * unJoueur, char uneCouleur){
 	cout << "Veuillez entrer le nom du joueur:" << endl;
 	cin >> unJoueur->nom;
-	unJoueur->nbJeton = 0;
 	unJoueur->couleur = uneCouleur;
+	unJoueur->nbJeton = 0;
+	unJoueur->listeJetons = NULL;
 }
 
-void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton){
-	unJeton.couleur = unJoueur->couleur;
-	unJoueur->listeJetons[unJoueur->nbJeton] = unJeton;
-	(unJoueur->nbJeton)++;
-}
+// void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton){
+// 	unJeton.couleur = unJoueur->couleur;
+// 	unJoueur->listeJetons[unJoueur->nbJeton] = unJeton;
+// 	(unJoueur->nbJeton)++;
+// }
 
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
-	Jeton unJeton;
-	initJeton(&unJeton, unJoueur->couleur, coordonnees);
+	Jeton * nouveauJeton = new Jeton;
+	initJeton(nouveauJeton, unJoueur->couleur, coordonnees);
 	
-	unJoueur->listeJetons[unJoueur->nbJeton] = unJeton;
+	if(unJoueur->listeJetons != NULL){
+		nouveauJeton->suivant = unJoueur->listeJetons;
+	}else{
+		nouveauJeton->suivant = NULL;
+	}
+	unJoueur->listeJetons = nouveauJeton;
 	(unJoueur->nbJeton)++;
 }
 
 void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
-	int count = 0;
+	Jeton * tmp = unJoueur->listeJetons;
+	Jeton * precedent = NULL;
 	bool supprime = false;
 
-	while(count < unJoueur->nbJeton && !supprime){
-		if(unJoueur->listeJetons[count].coordonnees[0] == coordonnees[0] && unJoueur->listeJetons[count].coordonnees[1] == coordonnees[1]){
-			unJoueur->listeJetons[count] = unJoueur->listeJetons[unJoueur->nbJeton - 1];
+	while(tmp != NULL && !supprime){
+		if(tmp->coordonnees[0] == coordonnees[0] && tmp->coordonnees[1] == coordonnees[1]){
+			if(precedent == NULL){
+				unJoueur->listeJetons = unJoueur->listeJetons->suivant;
+				free(tmp);
+			}else{
+				precedent->suivant = tmp->suivant;
+				free(tmp);
+			}
 			unJoueur->nbJeton = unJoueur->nbJeton -1;
 
 			supprime = true;
 		}
-		count++;
+		precedent = tmp;
+		tmp = tmp->suivant;
 	}
 }
 

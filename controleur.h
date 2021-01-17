@@ -16,7 +16,6 @@ void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCo
 bool caseExiste(int x, int y);
 
 // JOUEUR
-void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton);
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 

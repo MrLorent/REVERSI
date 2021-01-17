@@ -25,7 +25,8 @@ const int VECTEURS[8][2] = {
 typedef struct Jeton{
     char couleur; //'b' = blanc, 'n' = noir
     int coordonnees[2]; // abscisse, ordonné
-}Jeton, Marqueur;
+    struct Jeton * suivant;
+}Jeton, Marqueur, *ListeJetons, *ListeMarqueurs;
 
 typedef struct CoupJouable{
     Marqueur * emplacement;
@@ -35,8 +36,8 @@ typedef struct CoupJouable{
 typedef struct Joueur{
     char nom[20];
     char couleur;
-    Jeton listeJetons[64];
     int nbJeton;
+    ListeJetons listeJetons;
 }Joueur;
 
 const int MAXLARGEUR = 8;
