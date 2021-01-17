@@ -46,9 +46,8 @@ bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueu
 
         Capture * tmp2 = tmp1->captures;
         while(tmp2 != NULL){
-            cout << "coorCaptures : x=" << tmp2->jeton->coordonnees[0] << " y=" << tmp2->jeton->coordonnees[1] << endl;
-                supprimeJetonJoueur(joueurCourant, tmp2->jeton->coordonnees);
-                ajouteJetonJoueur(adversaire, tmp2->jeton->coordonnees);
+                ajouteJetonJoueur(joueurCourant, tmp2->jeton->coordonnees);
+                supprimeJetonJoueur(adversaire, tmp2->jeton->coordonnees);
             tmp2 = tmp2->suivant;
         }
         

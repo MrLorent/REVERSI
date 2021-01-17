@@ -75,7 +75,7 @@ int main(){
         if(leJeu.joueur1.nbJeton  < leJeu.joueur2.nbJeton){
             cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " ! Félicitations à lui !" << endl;
         }else{
-            cout << "C'est un égalité ! Félicitaion à vous deux ! " << endl;
+            cout << "C'est une égalité ! Félicitaion à vous deux ! " << endl;
         }
     }
 
