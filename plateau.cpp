@@ -90,20 +90,9 @@ bool captureJeton(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2],
 
             if(directionValide(plateau, caseSouhaitee, i, coorJetonsPris, &nbJetonsPris, adversaire->couleur, joueurCourant->couleur)){
                 coupValide = true;
-                for(int i=0;i<nbJetonsPris;i++){
-                    int count = 0;
-                    bool transfere = false;
-
-                    while(count < adversaire->nbJeton && !transfere){
-                        if(adversaire->listeJetons[count].coordonnees[0] == coorJetonsPris[i][0] && adversaire->listeJetons[count].coordonnees[1] == coorJetonsPris[i][1]){
-                            adversaire->listeJetons[count] = adversaire->listeJetons[adversaire->nbJeton - 1];
-                            adversaire->nbJeton = adversaire->nbJeton -1;
-
-                            ajouteJetonJoueur(joueurCourant, coorJetonsPris[i]);
-                            transfere = true;
-                        }
-                        count++;
-                    }
+                for(int i=0; i < nbJetonsPris; i++){
+                    supprimeJetonJoueur(adversaire, coorJetonsPris[i]);
+                    ajouteJetonJoueur(joueurCourant, coorJetonsPris[i]);
                 }
             }
         }
@@ -120,7 +109,6 @@ bool captureJeton(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseSouhaitee[2],
 bool directionValide(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int coorJetonsPris[8][2], int * count, char couleurAdversaire, char objectif){
     Jeton * contenuCaseSuivante;
     int caseSuivante[2];
-    bool validee;
     
     if(caseExiste(caseDepart[0] + VECTEURS[uneDirection][0], caseDepart[1] + VECTEURS[uneDirection][1])){
         contenuCaseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
@@ -134,16 +122,14 @@ bool directionValide(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2],
             return directionValide(plateau, caseSuivante, uneDirection, coorJetonsPris, count, couleurAdversaire, objectif);
         }else{
             if(contenuCaseSuivante->couleur == objectif){
-                validee = true;
+                return true;
             }else{
-                validee = false;
+                return false;
             }
         }
     }else{
-        validee = false;
+        return false;
     }
-    
-    return validee;
 }
 
 void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables){
@@ -196,7 +182,6 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
 bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int * count, char couleurAdversaire, char objectif){
     Jeton * contenuCaseSuivante;
     int caseSuivante[2];
-    bool validee;
     
     if(caseExiste(caseDepart[0] + VECTEURS[uneDirection][0], caseDepart[1] + VECTEURS[uneDirection][1])){
         contenuCaseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
@@ -208,16 +193,14 @@ bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2]
             return directionJouable(plateau, caseSuivante, uneDirection, count, couleurAdversaire, objectif);
         }else{
             if(contenuCaseSuivante->couleur == objectif){
-                validee = true;
+                return true;
             }else{
-                validee = false;
+                return false;
             }
         }
     }else{
-        validee = false;
+        return false;
     }
-
-    return validee;
 }
 
 bool caseExiste(int x, int y){

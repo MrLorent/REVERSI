@@ -18,6 +18,7 @@ bool caseExiste(int x, int y);
 // JOUEUR
 void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton);
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
+void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 
 // MAIN
 bool saisieCorrecte(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]);

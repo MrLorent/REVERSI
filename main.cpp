@@ -8,10 +8,9 @@ using namespace std;
 
 int main(){
     Jeu leJeu;
-    Jeton nouveauJeton;
     int toursPasses = 0;
     char saisieUt[2];
-    int casePrise[2];
+    int coorSaisie[2];
     bool partieTerminee = false;
     ListeCoupsJouables coupsJouables = NULL;
 
@@ -39,20 +38,20 @@ int main(){
             cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
             do{
                 cin >> saisieUt;
-            }while(!saisieCorrecte(leJeu.plateau, saisieUt, casePrise) || !captureJeton(leJeu.plateau, casePrise, leJeu.joueurCourant, leJeu.joueurEnAttente));
+            }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !captureJeton(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
 
             // FIN DU TOUR
             toursPasses = 0;
             retireCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
-            ajouteJetonJoueur(leJeu.joueurCourant, casePrise);
-            free(leJeu.plateau[casePrise[1]][casePrise[0]]);
+            ajouteJetonJoueur(leJeu.joueurCourant, coorSaisie);
+            free(leJeu.plateau[coorSaisie[1]][coorSaisie[0]]);
         }else{
             char passerTour;
             // Affichage du plateau
             affichePlateau(leJeu.plateau);
 
             do{
-                cout << "Malheureusement vous n'avaez aucun coup jouable..." << endl;
+                cout << "Malheureusement vous n'avez aucun coup jouable..." << endl;
                 cout << "Passer au tour suivant ? (o/n)" << endl;
                 cin >> passerTour;
             }while(passerTour != 'o');

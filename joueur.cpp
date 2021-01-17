@@ -27,6 +27,21 @@ void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	(unJoueur->nbJeton)++;
 }
 
+void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
+	int count = 0;
+	bool supprime = false;
+
+	while(count < unJoueur->nbJeton && !supprime){
+		if(unJoueur->listeJetons[count].coordonnees[0] == coordonnees[0] && unJoueur->listeJetons[count].coordonnees[1] == coordonnees[1]){
+			unJoueur->listeJetons[count] = unJoueur->listeJetons[unJoueur->nbJeton - 1];
+			unJoueur->nbJeton = unJoueur->nbJeton -1;
+
+			supprime = true;
+		}
+		count++;
+	}
+}
+
 void afficheJoueur(Joueur joueur){
 	cout << "AFFICHAGE DES INFORMATIONS D'UN JOUEUR" << endl;
 	cout << "Nom: " << joueur.nom << endl;
