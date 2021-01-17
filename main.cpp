@@ -38,7 +38,7 @@ int main(){
             cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
             do{
                 cin >> saisieUt;
-            }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu, &coupsJouables, coorSaisie));
+            }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
 
             // FIN DU TOUR
             toursPasses = 0;

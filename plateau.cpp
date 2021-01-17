@@ -31,7 +31,7 @@ bool caseExiste(int x, int y){
     return (x >= 0 && x <= 7) && (y >= 0 && y <= 7);
 }
 
-bool coupJouable(Jeu * leJeu, ListeCoupsJouables * coupsJouables, int caseSouhaitee[2]){
+bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){
     int rang = estEnregistre(coupsJouables, caseSouhaitee);
     bool coupValide = false;
     
@@ -47,8 +47,8 @@ bool coupJouable(Jeu * leJeu, ListeCoupsJouables * coupsJouables, int caseSouhai
         Capture * tmp2 = tmp1->captures;
         while(tmp2 != NULL){
             cout << "coorCaptures : x=" << tmp2->jeton->coordonnees[0] << " y=" << tmp2->jeton->coordonnees[1] << endl;
-                supprimeJetonJoueur(leJeu->joueurEnAttente, tmp2->jeton->coordonnees);
-                //ajouteJetonJoueur(leJeu->joueurCourant, tmp2->jeton->coordonnees);
+                supprimeJetonJoueur(joueurCourant, tmp2->jeton->coordonnees);
+                ajouteJetonJoueur(adversaire, tmp2->jeton->coordonnees);
             tmp2 = tmp2->suivant;
         }
         

@@ -11,7 +11,7 @@ void videListe(ListeCaptures * uneListe);
 
 // PLATEAU
 void ajouteJetonPlateau(Joueur * unJoueur, Jeton * lePlateau[MAXLARGEUR][MAXLARGEUR]);
-bool coupJouable(Jeu * leJeu, ListeCoupsJouables * coupsJouables, int caseSouhaitee[2]);
+bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire);
 bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, ListeCaptures * jetonsCaptures, int * count, char couleurAdversaire, char objectif);
 bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables);
 void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables);
