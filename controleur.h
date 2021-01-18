@@ -7,6 +7,7 @@ bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2]
 void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, ListeJetons * jetonsCaptures, int nbCaptures);
 int estEnregistre(ListeCoupsJouables * coupsJouables, int coorEmplacement[2]);
 bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire);
+void joueLeCoup(ListeJetons * jetonsCaptures, Joueur * joueurCourant, Joueur * adversaire);
 void videListeCoupsJouables(ListeCoupsJouables * uneListe);
 void changeJoueurCourant(Jeu * unJeu);
 
@@ -26,6 +27,7 @@ void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 
 // MAIN
+bool saisieMenuCorrecte(int saisieUt);
 bool saisieCorrecte(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]);
 void convertCoordonnees(char saisieUt[2], int saisieTraduite[2]);
 

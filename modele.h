@@ -34,6 +34,8 @@ typedef struct Joueur{
 }Joueur;
 
 const int MAXLARGEUR = 8;
+const int AUTRE_JOUEUR = 1;
+const int ORDINATEUR = 2;
 typedef struct Jeu{
     Joueur joueur1;
     Joueur joueur2;
@@ -41,6 +43,7 @@ typedef struct Jeu{
     Joueur * joueurEnAttente;
     ListeCoupsJouables coupsJouables;
     Jeton * plateau[MAXLARGEUR][MAXLARGEUR];
+    int mode;
 }Jeu;
 
 // JEU
@@ -55,5 +58,6 @@ void initMarqueur(Marqueur * unMarqueur, int coordonnees[2]);
 
 // JOUEUR
 void initJoueur(Joueur * unJoueur, char uneCouleur);
+void initOrdinateur(Joueur * unJoueur);
 
 #endif

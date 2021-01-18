@@ -18,12 +18,16 @@ void initJeu(Jeu * unJeu){
 	ajouteJetonJoueur(&unJeu->joueur1, coor1);
 	ajouteJetonJoueur(&unJeu->joueur1, coor2);
 
-	// Initialisation du second joueur et de ses deux premiers jetons
-	cout << endl;
-	cout << "ENREGISTREMENT DU SECOND JOUEUR :" << endl;
-    initJoueur(&unJeu->joueur2, 'n');
-	ajouteJetonJoueur(&unJeu->joueur2, coor3);
-	ajouteJetonJoueur(&unJeu->joueur2, coor4);
+    if(unJeu->mode == AUTRE_JOUEUR){
+        // Initialisation du second joueur et de ses deux premiers jetons
+        cout << endl;
+        cout << "ENREGISTREMENT DU SECOND JOUEUR :" << endl;
+        initJoueur(&unJeu->joueur2, 'n');
+    }else{
+        initOrdinateur(&unJeu->joueur2);
+    }
+    ajouteJetonJoueur(&unJeu->joueur2, coor3);
+    ajouteJetonJoueur(&unJeu->joueur2, coor4);
 
 	// Initialisation du joueur courant
 	unJeu->joueurCourant = &unJeu->joueur1;
@@ -164,20 +168,15 @@ bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueu
     bool coupValide = false;
     
     if(rang >= 0){
-        CoupJouable * tmp1 = *coupsJouables; 
+        CoupJouable * tmp = *coupsJouables; 
 
         coupValide = true;
 
         for(int i=0; i<rang-1; i++){
-            tmp1 = tmp1->suivant;
+            tmp = tmp->suivant;
         }
 
-        Jeton * tmp2 = tmp1->jetonsCaptures;
-        while(tmp2 != NULL){
-                ajouteJetonJoueur(joueurCourant, tmp2->coordonnees);
-                supprimeJetonJoueur(adversaire, tmp2->coordonnees);
-            tmp2 = tmp2->suivant;
-        }
+        joueLeCoup(&(tmp->jetonsCaptures), joueurCourant, adversaire);
         
     }else{
         cout << "Erreur: vous devez au moins capturer un jeton adverse." << endl;
@@ -185,6 +184,15 @@ bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueu
     }
 
     return coupValide;
+}
+
+void joueLeCoup(ListeJetons * jetonsCaptures, Joueur * joueurCourant, Joueur * adversaire){
+    Jeton * tmp = *jetonsCaptures;
+        while(tmp != NULL){
+                ajouteJetonJoueur(joueurCourant, tmp->coordonnees);
+                supprimeJetonJoueur(adversaire, tmp->coordonnees);
+            tmp = tmp->suivant;
+        }
 }
 
 void videListeCoupsJouables(ListeCoupsJouables * uneListe){

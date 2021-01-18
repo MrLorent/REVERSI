@@ -15,6 +15,17 @@ void initJoueur(Joueur * unJoueur, char uneCouleur){
 	unJoueur->listeJetons = NULL;
 }
 
+void initOrdinateur(Joueur * unJoueur){
+	char nomOrdi[8] = {'M','i','c','h','e','l','l','e'};
+	
+	for(int i=0; i<8;i++){
+		unJoueur->nom[i] = nomOrdi[i];
+	}
+	unJoueur->couleur = 'n';
+	unJoueur->nbJeton = 0;
+	unJoueur->listeJetons = NULL;
+}
+
 // VUES
 void afficheJoueur(Joueur joueur){
 	cout << "AFFICHAGE DES INFORMATIONS D'UN JOUEUR" << endl;

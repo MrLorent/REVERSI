@@ -88,7 +88,6 @@ void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCo
     CoupJouable * tmp = *coupsJouables;
 
     while(tmp != NULL){
-        cout << "nbCaptures: " << tmp->nbCaptures << endl;
         tmp->emplacement->couleur = 'j';
         tmp = tmp->suivant;
     }
