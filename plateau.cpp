@@ -19,7 +19,6 @@ void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
 }
 
 // VUES
-
 void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     const char tabLettres[MAXLARGEUR] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
     const char tabChiffres[MAXLARGEUR] = { '1', '2', '3', '4', '5', '6', '7', '8' };

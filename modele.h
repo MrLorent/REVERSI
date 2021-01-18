@@ -1,24 +1,15 @@
 #ifndef MODELE_H
 #define MODELE_H
 
-const int HAUT_GAUCHE = 0;
-const int HAUT_MILIEU = 1;
-const int HAUT_DROIT = 2;
-const int MILIEU_GAUCHE = 3;
-const int MILIEU_DROIT = 4;
-const int BAS_GAUCHE = 5;
-const int BAS_MILIEU = 6;
-const int BAS_DROIT = 7;
-
 const int VECTEURS[8][2] = {
-    {-1, -1},
-    {0, -1},
-    {1, -1},
-    {-1, 0},
-    {1, 0},
-    {-1, 1},
-    {0, 1},
-    {1, 1}
+    {-1, -1}, // HAUT_GAUCHE
+    {0, -1}, // HAUT_MILIEU
+    {1, -1}, // HAUT_DROIT
+    {1, 0}, // MILIEU_DROIT
+    {1, 1}, // BAS_DROIT
+    {0, 1}, // BAS_MILIEU
+    {-1, 1}, // BAS_GAUCHE
+    {-1, 0} // MILIEU_GAUCHE
 };
 
 

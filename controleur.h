@@ -2,16 +2,16 @@
 #define CONTROLEUR_H
 
 // JEU
-void changeJoueurCourant(Jeu * unJeu);
+bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables);
+bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, ListeJetons * jetonsCaptures, int * count, char couleurAdversaire, char objectif);
 void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, ListeJetons * jetonsCaptures, int nbCaptures);
 int estEnregistre(ListeCoupsJouables * coupsJouables, int coorEmplacement[2]);
+bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire);
 void videListeCoupsJouables(ListeCoupsJouables * uneListe);
+void changeJoueurCourant(Jeu * unJeu);
 
 // PLATEAU
 void ajouteJetonPlateau(Joueur * unJoueur, Jeton * lePlateau[MAXLARGEUR][MAXLARGEUR]);
-bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire);
-bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, ListeJetons * jetonsCaptures, int * count, char couleurAdversaire, char objectif);
-bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables);
 void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables);
 void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables);
 bool caseExiste(int x, int y);
