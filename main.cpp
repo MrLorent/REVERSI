@@ -34,11 +34,13 @@ int main(){
     initJeu(&leJeu);
     
     do{
+        system("clear");
+        cout << endl;
         // DÉBUT DU TOUR
         // Affichage des informations sur le joueur courant
         cout << "NOUVEAU TOUR DE JEU:" << endl;
         cout << "Joueur courant: " << leJeu.joueurCourant->nom << endl;
-        cout << "Nombre de jeton du joueur courant: " << leJeu.joueurCourant->nbJeton << endl;
+        cout << "Nombre de jeton(s) du joueur courant: " << leJeu.joueurCourant->nbJeton << endl;
 
         // Mise à jour des données du plateau
         ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);

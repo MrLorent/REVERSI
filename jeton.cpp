@@ -31,15 +31,6 @@ void ajouteJetonCapture(ListeJetons * liste, int coorJetonCapture[2]){
 	*liste = nouvelleCapture;
 }
 
-void ajouteJetonsCaptures(ListeJetons * liste1, ListeJetons * liste2){
-	Jeton * tmp = *liste2;
-
-	while(tmp != NULL){
-		ajouteJetonCapture(liste1, tmp->coordonnees);
-		tmp = tmp->suivant;
-	}
-}
-
 void videListeJetons(ListeJetons * uneListe){
 	Jeton * tmp = *uneListe;
 	while(tmp != NULL){

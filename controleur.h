@@ -20,7 +20,6 @@ bool caseExiste(int x, int y);
 
 // JETON
 void ajouteJetonCapture(ListeJetons * liste, int coorJetonCapture[2]);
-void ajouteJetonsCaptures(ListeJetons * liste1, ListeJetons * liste2);
 void videListeJetons(ListeJetons * uneListe);
 
 // JOUEUR
