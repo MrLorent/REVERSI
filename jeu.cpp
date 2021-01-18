@@ -54,25 +54,27 @@ void changeJoueurCourant(Jeu * unJeu){
 	}
 }
 
-void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, ListeCaptures * captures, int nbCaptures){
+void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, ListeJetons * jetonsCaptures, int nbCaptures){
 	if(estEnregistre(liste, emplacement->coordonnees) >= 0){
 		CoupJouable * tmp = *liste;
 		while(tmp != NULL){
 			if((tmp)->emplacement->coordonnees[0] == emplacement->coordonnees[0] && (tmp)->emplacement->coordonnees[1] == emplacement->coordonnees[1]){
-				concatCaptures(&(tmp->captures), captures);
+				ajouteJetonsCaptures(&(tmp->jetonsCaptures), jetonsCaptures);
 				tmp->nbCaptures = tmp->nbCaptures + nbCaptures;
 			}
 		tmp = tmp->suivant;
 		}
 	}else{
-		Capture * tmp = *captures;
+		Jeton * tmp = *jetonsCaptures;
 		CoupJouable * nouveauCoup = new CoupJouable;
 		nouveauCoup->emplacement = emplacement;
 		
-		while(tmp != NULL){
-			ajouteJetonCapture(&(nouveauCoup->captures), tmp->jeton);
-			tmp = tmp->suivant;
-		}
+		ajouteJetonsCaptures(&(nouveauCoup->jetonsCaptures), jetonsCaptures);
+
+		// while(tmp != NULL){
+		// 	ajouteJetonCapture(&(nouveauCoup->captures), tmp->jeton);
+		// 	tmp = tmp->suivant;
+		// }
 		nouveauCoup->nbCaptures = nbCaptures;
 			
 		if(liste != NULL){
@@ -84,9 +86,10 @@ void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, L
 	}
 }
 
-void ajouteJetonCapture(ListeCaptures * liste, Jeton * jetonCapture){
-	Capture * nouvelleCapture = new Capture;
-	nouvelleCapture->jeton = jetonCapture;
+void ajouteJetonCapture(ListeJetons * liste, int coorJetonCapture[2]){
+	Jeton * nouvelleCapture = new Jeton;
+	nouvelleCapture->coordonnees[0] = coorJetonCapture[0];
+	nouvelleCapture->coordonnees[1] = coorJetonCapture[1];
 		
 	if(liste != NULL){
 		nouvelleCapture->suivant = *liste;
@@ -96,8 +99,8 @@ void ajouteJetonCapture(ListeCaptures * liste, Jeton * jetonCapture){
 	*liste = nouvelleCapture;
 }
 
-void videListe(ListeCaptures * uneListe){
-	Capture * tmp = *uneListe;
+void videListe(ListeJetons * uneListe){
+	Jeton * tmp = *uneListe;
 
 	while(tmp != NULL){
 		*uneListe = (*uneListe)->suivant;
@@ -106,11 +109,11 @@ void videListe(ListeCaptures * uneListe){
 	}
 }
 
-void concatCaptures(ListeCaptures * liste1, ListeCaptures * liste2){
-	Capture * tmp = *liste2;
+void ajouteJetonsCaptures(ListeJetons * liste1, ListeJetons * liste2){
+	Jeton * tmp = *liste2;
 
 	while(tmp != NULL){
-		ajouteJetonCapture(liste1, tmp->jeton);
+		ajouteJetonCapture(liste1, tmp->coordonnees);
 		tmp = tmp->suivant;
 	}
 }

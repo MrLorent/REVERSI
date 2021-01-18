@@ -44,10 +44,10 @@ bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueu
             tmp1 = tmp1->suivant;
         }
 
-        Capture * tmp2 = tmp1->captures;
+        Jeton * tmp2 = tmp1->jetonsCaptures;
         while(tmp2 != NULL){
-                ajouteJetonJoueur(joueurCourant, tmp2->jeton->coordonnees);
-                supprimeJetonJoueur(adversaire, tmp2->jeton->coordonnees);
+                ajouteJetonJoueur(joueurCourant, tmp2->coordonnees);
+                supprimeJetonJoueur(adversaire, tmp2->coordonnees);
             tmp2 = tmp2->suivant;
         }
         
@@ -65,24 +65,24 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
     while(tmp != NULL){
         bool leCoupEstJouable = false;
         Jeton * leCoupJouable = NULL;
-        ListeCaptures * jetonsCaptures = new ListeCaptures;
-        *jetonsCaptures = NULL;
+        ListeJetons * jetonsCapturestmp = new ListeJetons;
+        *jetonsCapturestmp = NULL;
 
         for(int direction=0; direction<8;direction++){
             if(caseExiste(tmp->coordonnees[0]+VECTEURS[direction][0], tmp->coordonnees[1]+VECTEURS[direction][1]) && plateau[tmp->coordonnees[1]+VECTEURS[direction][1]][tmp->coordonnees[0]+VECTEURS[direction][0]]->couleur == adversaire->couleur){
                 int count = 0;
 
-                if(directionJouable(plateau, tmp->coordonnees, direction, jetonsCaptures, &count, adversaire->couleur, 'v')){
+                if(directionJouable(plateau, tmp->coordonnees, direction, jetonsCapturestmp, &count, adversaire->couleur, 'v')){
                     leCoupEstJouable = true;
                     leCoupJouable = plateau[tmp->coordonnees[1]+VECTEURS[direction][1]*(count+1)][tmp->coordonnees[0]+VECTEURS[direction][0]*(count+1)];
-                    enregistreCoupJouable(coupsJouables, leCoupJouable, jetonsCaptures, count);
-                    videListe(jetonsCaptures);
+                    enregistreCoupJouable(coupsJouables, leCoupJouable, jetonsCapturestmp, count);
+                    videListe(jetonsCapturestmp);
                 }
             }
         }
-        if(*jetonsCaptures != NULL){
-            videListe(jetonsCaptures);
-            free(jetonsCaptures);
+        if(*jetonsCapturestmp != NULL){
+            videListe(jetonsCapturestmp);
+            free(jetonsCapturestmp);
         }
 
         tmp = tmp->suivant;
@@ -96,7 +96,7 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
     
 }
 
-bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, ListeCaptures * jetonsCaptures, int * count, char couleurAdversaire, char objectif){
+bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, ListeJetons * jetonsCaptures, int * count, char couleurAdversaire, char objectif){
     Jeton * caseSuivante;
     int coorCaseSuivante[2];
     
@@ -106,7 +106,7 @@ bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2]
         coorCaseSuivante[1] = caseDepart[1] + VECTEURS[uneDirection][1];
 
         if(caseSuivante->couleur == couleurAdversaire){
-            ajouteJetonCapture(jetonsCaptures, caseSuivante);
+            ajouteJetonCapture(jetonsCaptures, caseSuivante->coordonnees);
             (*count)++;
             return directionJouable(plateau, coorCaseSuivante, uneDirection, jetonsCaptures, count, couleurAdversaire, objectif);
         }else{
@@ -125,7 +125,6 @@ void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCo
     CoupJouable * tmp = *coupsJouables;
 
     while(tmp != NULL){
-        cout << "nbCaptures: " << tmp->nbCaptures << endl;
         tmp->emplacement->couleur = 'j';
         tmp = tmp->suivant;
     }
