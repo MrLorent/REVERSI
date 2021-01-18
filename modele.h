@@ -21,7 +21,6 @@ typedef struct Jeton{
 
 typedef struct CoupJouable{
     Marqueur * emplacement;
-    ListeJetons jetonsCaptures;
     int nbCaptures;
     struct CoupJouable * suivant;
 }CoupJouable, *ListeCoupsJouables;

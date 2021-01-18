@@ -58,7 +58,7 @@ int main(){
                     tmp = tmp->suivant;
                 }
 
-                joueLeCoup(coupAJouer->emplacement, &coupAJouer->jetonsCaptures, &leJeu.joueur2, &leJeu.joueur1);
+                joueLeCoup(leJeu.plateau, coupAJouer->emplacement->coordonnees, &leJeu.joueur2, &leJeu.joueur1);
 
                 // Affichage du plateau
                 ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
@@ -80,6 +80,7 @@ int main(){
                 do{
                     cin >> caseSaisie;
                 }while(!saisieCorrecte(leJeu.plateau, caseSaisie, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
+                joueLeCoup(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente);
             }
 
             // FIN DU TOUR
