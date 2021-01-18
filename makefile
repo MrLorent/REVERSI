@@ -7,13 +7,14 @@ ifeq ($(DEBUG), yes)
 CFLAGS += -g
 endif
 
-reversi.exe: main.o jeu.o joueur.o plateau.o
+reversi.exe: main.o jeu.o joueur.o plateau.o jeton.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 main.o: modele.h vue.h controleur.h
 jeu.o : modele.h vue.h controleur.h
 joueur.o: modele.h vue.h controleur.h
 plateau.o: modele.h vue.h controleur.h
+jeton.o: modele.h vue.h controleur.h
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(LDFLAGS)

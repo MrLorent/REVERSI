@@ -48,16 +48,19 @@ typedef struct Jeu{
     Joueur joueur2;
     Joueur * joueurCourant;
     Joueur * joueurEnAttente;
+    ListeCoupsJouables coupsJouables;
     Jeton * plateau[MAXLARGEUR][MAXLARGEUR];
 }Jeu;
 
 // JEU
 void initJeu(Jeu * unJeu);
-void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]);
-void initMarqueur(Marqueur * unMarqueur, int coordonnees[2]);
 
 // PLATEAU
 void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]);
+
+// JETON
+void initJeton(Jeton * unJeton, char couleur, int coordonnees[2]);
+void initMarqueur(Marqueur * unMarqueur, int coordonnees[2]);
 
 // JOUEUR
 void initJoueur(Joueur * unJoueur, char uneCouleur);

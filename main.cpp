@@ -9,10 +9,9 @@ using namespace std;
 int main(){
     Jeu leJeu;
     int toursPasses = 0;
-    char saisieUt[2];
     int coorSaisie[2];
+    char saisieUt[2];
     bool partieTerminee = false;
-    ListeCoupsJouables coupsJouables = NULL;
 
     initJeu(&leJeu);
     
@@ -28,8 +27,8 @@ int main(){
         // Mise à jour des données du plateau
         ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
         ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
-        if(analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &coupsJouables)){
-            ajouteCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
+        if(analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &leJeu.coupsJouables)){
+            ajouteCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
             
             // Affichage du plateau
             affichePlateau(leJeu.plateau);
@@ -38,11 +37,11 @@ int main(){
             cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
             do{
                 cin >> saisieUt;
-            }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
+            }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
 
             // FIN DU TOUR
             toursPasses = 0;
-            retireCoupsJouablesPlateau(leJeu.plateau, &coupsJouables);
+            retireCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
             ajouteJetonJoueur(leJeu.joueurCourant, coorSaisie);
             free(leJeu.plateau[coorSaisie[1]][coorSaisie[0]]);
         }else{

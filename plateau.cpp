@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// MODÈLE
 void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     // Chaque case est remplie d'un marqueur indiquant que la case est "vide"
     for(int l=0;l<MAXLARGEUR;l++){
@@ -17,131 +18,7 @@ void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     }
 }
 
-void ajouteJetonPlateau(Joueur * unJoueur, Jeton * lePlateau[MAXLARGEUR][MAXLARGEUR]){
-    Jeton * tmp = unJoueur->listeJetons;
-    
-    while(tmp != NULL){
-        // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
-        lePlateau[tmp->coordonnees[1]][tmp->coordonnees[0]] = tmp;
-        tmp = tmp->suivant;
-    }
-}
-
-bool caseExiste(int x, int y){
-    return (x >= 0 && x <= 7) && (y >= 0 && y <= 7);
-}
-
-bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){
-    int rang = estEnregistre(coupsJouables, caseSouhaitee);
-    bool coupValide = false;
-    
-    if(rang >= 0){
-        CoupJouable * tmp1 = *coupsJouables; 
-
-        coupValide = true;
-
-        for(int i=0; i<rang-1; i++){
-            tmp1 = tmp1->suivant;
-        }
-
-        Jeton * tmp2 = tmp1->jetonsCaptures;
-        while(tmp2 != NULL){
-                ajouteJetonJoueur(joueurCourant, tmp2->coordonnees);
-                supprimeJetonJoueur(adversaire, tmp2->coordonnees);
-            tmp2 = tmp2->suivant;
-        }
-        
-    }else{
-        cout << "Erreur: vous devez au moins capturer un jeton adverse." << endl;
-        cout << "Veuillez saisir une nouvelle case :" << endl;
-    }
-
-    return coupValide;
-}
-
-bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables){
-    Jeton * tmp = joueurCourant->listeJetons;
-
-    while(tmp != NULL){
-        bool leCoupEstJouable = false;
-        Jeton * leCoupJouable = NULL;
-        ListeJetons * jetonsCapturestmp = new ListeJetons;
-        *jetonsCapturestmp = NULL;
-
-        for(int direction=0; direction<8;direction++){
-            if(caseExiste(tmp->coordonnees[0]+VECTEURS[direction][0], tmp->coordonnees[1]+VECTEURS[direction][1]) && plateau[tmp->coordonnees[1]+VECTEURS[direction][1]][tmp->coordonnees[0]+VECTEURS[direction][0]]->couleur == adversaire->couleur){
-                int count = 0;
-
-                if(directionJouable(plateau, tmp->coordonnees, direction, jetonsCapturestmp, &count, adversaire->couleur, 'v')){
-                    leCoupEstJouable = true;
-                    leCoupJouable = plateau[tmp->coordonnees[1]+VECTEURS[direction][1]*(count+1)][tmp->coordonnees[0]+VECTEURS[direction][0]*(count+1)];
-                    enregistreCoupJouable(coupsJouables, leCoupJouable, jetonsCapturestmp, count);
-                    videListe(jetonsCapturestmp);
-                }
-            }
-        }
-        if(*jetonsCapturestmp != NULL){
-            videListe(jetonsCapturestmp);
-            free(jetonsCapturestmp);
-        }
-
-        tmp = tmp->suivant;
-    }
-
-    if(*coupsJouables != NULL){
-        return true;
-    }else{
-        return false;
-    }
-    
-}
-
-bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, ListeJetons * jetonsCaptures, int * count, char couleurAdversaire, char objectif){
-    Jeton * caseSuivante;
-    int coorCaseSuivante[2];
-    
-    if(caseExiste(caseDepart[0] + VECTEURS[uneDirection][0], caseDepart[1] + VECTEURS[uneDirection][1])){
-        caseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
-        coorCaseSuivante[0] = caseDepart[0] + VECTEURS[uneDirection][0];
-        coorCaseSuivante[1] = caseDepart[1] + VECTEURS[uneDirection][1];
-
-        if(caseSuivante->couleur == couleurAdversaire){
-            ajouteJetonCapture(jetonsCaptures, caseSuivante->coordonnees);
-            (*count)++;
-            return directionJouable(plateau, coorCaseSuivante, uneDirection, jetonsCaptures, count, couleurAdversaire, objectif);
-        }else{
-            if(caseSuivante->couleur == objectif){
-                return true;
-            }else{
-                return false;
-            }
-        }
-    }else{
-        return false;
-    }
-}
-
-void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables){
-    CoupJouable * tmp = *coupsJouables;
-
-    while(tmp != NULL){
-        tmp->emplacement->couleur = 'j';
-        tmp = tmp->suivant;
-    }
-}
-
-void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables){
-    CoupJouable * tmp;
-
-    while(*coupsJouables != NULL){
-        if((*coupsJouables)->emplacement->couleur = 'j'){
-            (*coupsJouables)->emplacement->couleur = 'v';
-        }
-        tmp = *coupsJouables;
-        *coupsJouables = (*coupsJouables)->suivant;
-        free(tmp);
-    }
-}
+// VUES
 
 void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     const char tabLettres[MAXLARGEUR] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
@@ -195,4 +72,42 @@ void afficheLigneTransition(){
         cout << "+---";
     }
     cout << "+---+" << endl;
+}
+
+// CONTROLEURS
+void ajouteJetonPlateau(Joueur * unJoueur, Jeton * lePlateau[MAXLARGEUR][MAXLARGEUR]){
+    Jeton * tmp = unJoueur->listeJetons;
+    
+    while(tmp != NULL){
+        // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
+        lePlateau[tmp->coordonnees[1]][tmp->coordonnees[0]] = tmp;
+        tmp = tmp->suivant;
+    }
+}
+
+void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables){
+    CoupJouable * tmp = *coupsJouables;
+
+    while(tmp != NULL){
+        cout << "nbCaptures: " << tmp->nbCaptures << endl;
+        tmp->emplacement->couleur = 'j';
+        tmp = tmp->suivant;
+    }
+}
+
+void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables){
+    CoupJouable * tmp = *coupsJouables;
+
+    while(tmp != NULL){
+        if(tmp->emplacement->couleur = 'j'){
+            tmp->emplacement->couleur = 'v';
+        }
+        tmp = tmp->suivant;
+    }
+
+    videListeCoupsJouables(coupsJouables);
+}
+
+bool caseExiste(int x, int y){
+    return (x >= 0 && x <= 7) && (y >= 0 && y <= 7);
 }

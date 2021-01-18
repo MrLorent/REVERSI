@@ -4,10 +4,8 @@
 // JEU
 void changeJoueurCourant(Jeu * unJeu);
 void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, ListeJetons * jetonsCaptures, int nbCaptures);
-void ajouteJetonCapture(ListeJetons * liste, int coorJetonCapture[2]);
-void ajouteJetonsCaptures(ListeJetons * liste1, ListeJetons * liste2);
 int estEnregistre(ListeCoupsJouables * coupsJouables, int coorEmplacement[2]);
-void videListe(ListeJetons * uneListe);
+void videListeCoupsJouables(ListeCoupsJouables * uneListe);
 
 // PLATEAU
 void ajouteJetonPlateau(Joueur * unJoueur, Jeton * lePlateau[MAXLARGEUR][MAXLARGEUR]);
@@ -17,6 +15,11 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
 void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables);
 void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables);
 bool caseExiste(int x, int y);
+
+// JETON
+void ajouteJetonCapture(ListeJetons * liste, int coorJetonCapture[2]);
+void ajouteJetonsCaptures(ListeJetons * liste1, ListeJetons * liste2);
+void videListeJetons(ListeJetons * uneListe);
 
 // JOUEUR
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]);

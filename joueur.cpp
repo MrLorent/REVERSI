@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// MODELES
 void initJoueur(Joueur * unJoueur, char uneCouleur){
 	cout << "Veuillez entrer le nom du joueur:" << endl;
 	cin >> unJoueur->nom;
@@ -14,12 +15,14 @@ void initJoueur(Joueur * unJoueur, char uneCouleur){
 	unJoueur->listeJetons = NULL;
 }
 
-// void ajouteJetonJoueur(Joueur * unJoueur, Jeton unJeton){
-// 	unJeton.couleur = unJoueur->couleur;
-// 	unJoueur->listeJetons[unJoueur->nbJeton] = unJeton;
-// 	(unJoueur->nbJeton)++;
-// }
+// VUES
+void afficheJoueur(Joueur joueur){
+	cout << "AFFICHAGE DES INFORMATIONS D'UN JOUEUR" << endl;
+	cout << "Nom: " << joueur.nom << endl;
+	cout << "Nombre de jetons: " << joueur.nbJeton << endl;
+}
 
+// CONTROLEURS
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	Jeton * nouveauJeton = new Jeton;
 	initJeton(nouveauJeton, unJoueur->couleur, coordonnees);
@@ -54,10 +57,4 @@ void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 		precedent = tmp;
 		tmp = tmp->suivant;
 	}
-}
-
-void afficheJoueur(Joueur joueur){
-	cout << "AFFICHAGE DES INFORMATIONS D'UN JOUEUR" << endl;
-	cout << "Nom: " << joueur.nom << endl;
-	cout << "Nombre de jetons: " << joueur.nbJeton << endl;
 }
