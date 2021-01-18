@@ -55,15 +55,12 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
     Jeton * tmp = joueurCourant->listeJetons;
 
     while(tmp != NULL){
-        cout << "jusque là ok 5" << endl;
-        bool leCoupEstJouable = false;
         Jeton * leCoupJouable = NULL;
 
         for(int direction=0; direction<8;direction++){
             if(caseExiste(tmp->coordonnees[0]+VECTEURS[direction][0], tmp->coordonnees[1]+VECTEURS[direction][1]) && plateau[tmp->coordonnees[1]+VECTEURS[direction][1]][tmp->coordonnees[0]+VECTEURS[direction][0]]->couleur == adversaire->couleur){
                 int count = 0;
                 if(directionJouable(plateau, tmp->coordonnees, direction, &count, adversaire->couleur, 'v')){
-                    leCoupEstJouable = true;
                     leCoupJouable = plateau[tmp->coordonnees[1]+VECTEURS[direction][1]*(count+1)][tmp->coordonnees[0]+VECTEURS[direction][0]*(count+1)];
                     enregistreCoupJouable(coupsJouables, leCoupJouable, count);
                 }
@@ -145,24 +142,13 @@ int estEnregistre(ListeCoupsJouables * coupsJouables, int coorEmplacement[2]){
 }
 
 bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){
-    int rang = estEnregistre(coupsJouables, caseSouhaitee);
-    bool coupValide = false;
-    
-    if(rang >= 0){
-        CoupJouable * tmp = *coupsJouables; 
-
-        coupValide = true;
-
-        for(int i=0; i<rang-1; i++){
-            tmp = tmp->suivant;
-        }
-        
+    if(estEnregistre(coupsJouables, caseSouhaitee) >= 0){
+        return true;
     }else{
         cout << "Erreur: vous devez au moins capturer un jeton adverse." << endl;
         cout << "Veuillez saisir une nouvelle case :" << endl;
+        return false;
     }
-
-    return coupValide;
 }
 
 void joueLeCoup(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int coorJetonPlace[2], Joueur * joueurCourant, Joueur * adversaire){
