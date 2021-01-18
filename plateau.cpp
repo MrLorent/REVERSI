@@ -97,7 +97,7 @@ void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCo
     CoupJouable * tmp = *coupsJouables;
 
     while(tmp != NULL){
-        if(tmp->emplacement->couleur = 'j'){
+        if(tmp->emplacement->couleur == 'j'){
             tmp->emplacement->couleur = 'v';
         }
         tmp = tmp->suivant;
