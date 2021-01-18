@@ -55,6 +55,7 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
     Jeton * tmp = joueurCourant->listeJetons;
 
     while(tmp != NULL){
+        cout << "jusque là ok 5" << endl;
         bool leCoupEstJouable = false;
         Jeton * leCoupJouable = NULL;
         ListeJetons * jetonsCapturestmp = new ListeJetons;
@@ -63,7 +64,6 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
         for(int direction=0; direction<8;direction++){
             if(caseExiste(tmp->coordonnees[0]+VECTEURS[direction][0], tmp->coordonnees[1]+VECTEURS[direction][1]) && plateau[tmp->coordonnees[1]+VECTEURS[direction][1]][tmp->coordonnees[0]+VECTEURS[direction][0]]->couleur == adversaire->couleur){
                 int count = 0;
-
                 if(directionJouable(plateau, tmp->coordonnees, direction, jetonsCapturestmp, &count, adversaire->couleur, 'v')){
                     leCoupEstJouable = true;
                     leCoupJouable = plateau[tmp->coordonnees[1]+VECTEURS[direction][1]*(count+1)][tmp->coordonnees[0]+VECTEURS[direction][0]*(count+1)];
@@ -72,11 +72,7 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
                 }
             }
         }
-        if(*jetonsCapturestmp != NULL){
-            videListeJetons(jetonsCapturestmp);
-            free(jetonsCapturestmp);
-        }
-
+        free(*jetonsCapturestmp);
         tmp = tmp->suivant;
     }
 
@@ -176,7 +172,7 @@ bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueu
             tmp = tmp->suivant;
         }
 
-        joueLeCoup(&(tmp->jetonsCaptures), joueurCourant, adversaire);
+        joueLeCoup(tmp->emplacement, &(tmp->jetonsCaptures), joueurCourant, adversaire);
         
     }else{
         cout << "Erreur: vous devez au moins capturer un jeton adverse." << endl;
@@ -186,13 +182,15 @@ bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueu
     return coupValide;
 }
 
-void joueLeCoup(ListeJetons * jetonsCaptures, Joueur * joueurCourant, Joueur * adversaire){
+void joueLeCoup(Jeton * jetonPlace, ListeJetons * jetonsCaptures, Joueur * joueurCourant, Joueur * adversaire){
     Jeton * tmp = *jetonsCaptures;
         while(tmp != NULL){
                 ajouteJetonJoueur(joueurCourant, tmp->coordonnees);
                 supprimeJetonJoueur(adversaire, tmp->coordonnees);
             tmp = tmp->suivant;
         }
+        ajouteJetonJoueur(joueurCourant, jetonPlace->coordonnees);
+        free(jetonPlace);
 }
 
 void videListeCoupsJouables(ListeCoupsJouables * uneListe){

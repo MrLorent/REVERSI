@@ -21,10 +21,11 @@ void initMarqueur(Marqueur * unMarqueur, int coordonnees[2]){
 
 // CONTROLEURS
 void ajouteJetonCapture(ListeJetons * liste, int coorJetonCapture[2]){
+	cout << "11" << endl;
 	Jeton * nouvelleCapture = new Jeton;
+	cout << "12" << endl;
 	nouvelleCapture->coordonnees[0] = coorJetonCapture[0];
 	nouvelleCapture->coordonnees[1] = coorJetonCapture[1];
-		
 	if(liste != NULL){
 		nouvelleCapture->suivant = *liste;
 	}else{
@@ -44,10 +45,11 @@ void ajouteJetonsCaptures(ListeJetons * liste1, ListeJetons * liste2){
 
 void videListeJetons(ListeJetons * uneListe){
 	Jeton * tmp = *uneListe;
-
 	while(tmp != NULL){
 		*uneListe = (*uneListe)->suivant;
+		cout << "ici" << endl;
 		free(tmp);
+		cout << "pas après" << endl;
 		tmp = *uneListe;
 	}
 }
