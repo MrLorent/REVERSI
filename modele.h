@@ -35,6 +35,7 @@ typedef struct Joueur{
 const int MAXLARGEUR = 8;
 const int AUTRE_JOUEUR = 1;
 const int ORDINATEUR = 2;
+const int CHARGER_PARTIE = 3;
 typedef struct Jeu{
     Joueur joueur1;
     Joueur joueur2;
