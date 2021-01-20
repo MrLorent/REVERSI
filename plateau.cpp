@@ -3,6 +3,7 @@
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
+#include "couleur.h"
 
 using namespace std;
 
@@ -45,13 +46,13 @@ void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
             switch (plateau[l][c]->couleur)
             {
             case 'b':
-                cout << " X |";
+                cout << CYAN << " X " << ANNULE_COULEUR << "|";
                 break;
             case 'n':
-                cout << " O |";
+                cout << MAGENTA << " O " << ANNULE_COULEUR << "|";
                 break;
             case 'j':
-                cout << " * |";
+                cout << JAUNE << " * " << ANNULE_COULEUR << "|";
                 break;
             default:
                 cout << "   |";
