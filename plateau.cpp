@@ -6,23 +6,20 @@
 
 using namespace std;
 
-void initPlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
-    // Initialisation de chaque case à "vide"
+// MODÈLE
+void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
+    // Chaque case est remplie d'un marqueur indiquant que la case est "vide"
     for(int l=0;l<MAXLARGEUR;l++){
         for(int c=0;c<MAXLARGEUR;c++){
-            plateau[l][c]='v';
+            plateau[l][c]= new Marqueur;
+            int coor[2] = {c , l};
+            initMarqueur(plateau[l][c], coor);
         }
     }
 }
 
-void ajouteJetonPlateau(Joueur unJoueur, char lePlateau[MAXLARGEUR][MAXLARGEUR]){
-    for(int i=0; i < unJoueur.nbJeton; i++){
-        // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
-        lePlateau[unJoueur.listeJetons[i].coordonnees[1]][unJoueur.listeJetons[i].coordonnees[0]] = unJoueur.listeJetons[i].couleur;
-    }
-}
-
-void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
+// VUES
+void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     const char tabLettres[MAXLARGEUR] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
     const char tabChiffres[MAXLARGEUR] = { '1', '2', '3', '4', '5', '6', '7', '8' };
 
@@ -45,13 +42,16 @@ void affichePlateau(char plateau[MAXLARGEUR][MAXLARGEUR]){
         //on affiche le numéro de ligne
         cout << " " << tabChiffres[l] << " |";
         for(int c=0; c < MAXLARGEUR; c++){
-            switch (plateau[l][c])
+            switch (plateau[l][c]->couleur)
             {
             case 'b':
-                cout << " * |";
+                cout << " X |";
                 break;
             case 'n':
-                cout << " 0 |";
+                cout << " O |";
+                break;
+            case 'j':
+                cout << " * |";
                 break;
             default:
                 cout << "   |";
@@ -71,4 +71,41 @@ void afficheLigneTransition(){
         cout << "+---";
     }
     cout << "+---+" << endl;
+}
+
+// CONTROLEURS
+void ajouteJetonPlateau(Joueur * unJoueur, Jeton * lePlateau[MAXLARGEUR][MAXLARGEUR]){
+    Jeton * tmp = unJoueur->listeJetons;
+    
+    while(tmp != NULL){
+        // ATTENTION: Ici pour des questions d'affichages du plateau, les ordonnées sont données en PREMIER, et les abscisses en SECOND!
+        lePlateau[tmp->coordonnees[1]][tmp->coordonnees[0]] = tmp;
+        tmp = tmp->suivant;
+    }
+}
+
+void ajouteCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables){
+    CoupJouable * tmp = *coupsJouables;
+
+    while(tmp != NULL){
+        tmp->emplacement->couleur = 'j';
+        tmp = tmp->suivant;
+    }
+}
+
+void retireCoupsJouablesPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeCoupsJouables * coupsJouables){
+    CoupJouable * tmp = *coupsJouables;
+
+    while(tmp != NULL){
+        if(tmp->emplacement->couleur == 'j'){
+            tmp->emplacement->couleur = 'v';
+        }
+        tmp = tmp->suivant;
+    }
+
+    videListeCoupsJouables(coupsJouables);
+}
+
+bool caseExiste(int x, int y){
+    return (x >= 0 && x <= 7) && (y >= 0 && y <= 7);
 }
