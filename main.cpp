@@ -15,7 +15,7 @@ int main(){
     bool partieTerminee = false;
 
     system("clear");
-    cout << "BIENVENUE DANS NOTRE JEU DE REVERSI !" << endl;
+    cout << "\x1B[33m" << "BIENVENUE DANS NOTRE JEU DE REVERSI !" << "\x1B[0m" << endl;
     cout << endl;
     cout << endl;
     cout << "MENU PRINCIPAL" << endl;
