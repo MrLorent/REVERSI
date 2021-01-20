@@ -15,6 +15,7 @@ void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
             plateau[l][c]= new Marqueur;
             int coor[2] = {c , l};
             initMarqueur(plateau[l][c], coor);
+            
         }
     }
 }
