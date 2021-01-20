@@ -3,6 +3,7 @@
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
+#include "couleur.h"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ void initJeu(Jeu * unJeu){
 
 	// Initialisation du premier joueur et de ses deux premiers jetons
 	cout << endl;
-	cout << "ENREGISTREMENT DU PREMIER JOUEUR :" << endl;
+	cout << CYAN << "ENREGISTREMENT DU PREMIER JOUEUR :" << ANNULE_COULEUR <<endl;
 	initJoueur(&unJeu->joueur1, 'b');
 	ajouteJetonJoueur(&unJeu->joueur1, coor1);
 	ajouteJetonJoueur(&unJeu->joueur1, coor2);
@@ -21,7 +22,7 @@ void initJeu(Jeu * unJeu){
     if(unJeu->mode == AUTRE_JOUEUR){
         // Initialisation du second joueur et de ses deux premiers jetons
         cout << endl;
-        cout << "ENREGISTREMENT DU SECOND JOUEUR :" << endl;
+        cout << CYAN << "ENREGISTREMENT DU SECOND JOUEUR :" << ANNULE_COULEUR << endl;
         initJoueur(&unJeu->joueur2, 'n');
     }else{
         initOrdinateur(&unJeu->joueur2);

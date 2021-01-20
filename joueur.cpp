@@ -3,12 +3,14 @@
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
+#include "couleur.h"
+
 
 using namespace std;
 
 // MODELES
 void initJoueur(Joueur * unJoueur, char uneCouleur){
-	cout << "Veuillez entrer le nom du joueur:" << endl;
+	cout << MAGENTA << "Veuillez entrer le nom du joueur:" << ANNULE_COULEUR << endl;
 	cin >> unJoueur->nom;
 	unJoueur->couleur = uneCouleur;
 	unJoueur->nbJeton = 0;
