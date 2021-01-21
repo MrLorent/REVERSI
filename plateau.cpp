@@ -15,7 +15,6 @@ void initPlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
             plateau[l][c]= new Marqueur;
             int coor[2] = {c , l};
             initMarqueur(plateau[l][c], coor);
-            
         }
     }
 }
@@ -31,10 +30,10 @@ void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     cout << "  ";
     for(int i=0; i<MAXLARGEUR;i++){
         if(i == MAXLARGEUR-1){
-            cout << "   " << tabLettres[MAXLARGEUR-1] << "  " << endl;
+            cout << MAGENTA << "   " << tabLettres[MAXLARGEUR-1] << "  " << ANNULE_COULEUR << endl;
         }else
         {
-            cout << "   " << tabLettres[i];
+            cout << MAGENTA << "   " << tabLettres[i] << ANNULE_COULEUR;
         }
     }
     afficheLigneTransition();
@@ -42,7 +41,7 @@ void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
     // Affichage du plateau
     for(int l=0; l < MAXLARGEUR; l++){
         //on affiche le numéro de ligne
-        cout << " " << tabChiffres[l] << " |";
+        cout << MAGENTA << " " << tabChiffres[l] << ANNULE_COULEUR << " |";
         for(int c=0; c < MAXLARGEUR; c++){
             switch (plateau[l][c]->couleur)
             {
@@ -53,7 +52,7 @@ void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
                 cout << " O " << "|";
                 break;
             case 'j':
-                cout << " * " << "|";
+                cout << JAUNE << " * " << ANNULE_COULEUR << "|";
                 break;
             default:
                 cout << "   |";
