@@ -221,6 +221,10 @@ void sauvegardePartie(Jeu leJeu){
         fichier << curseur->coordonnees[1] << endl;
         curseur=curseur->suivant;
         }
+        fichier << "-1" << endl;
+        fichier << "-1" << endl;
+
+
         //récup nom joueur 2, couleur et coordonnees de ses jetons
         fichier << leJeu.joueur2.nom << endl;
         fichier << leJeu.joueur2.couleur << endl;
@@ -230,11 +234,11 @@ void sauvegardePartie(Jeu leJeu){
         fichier << curseur->coordonnees[1] << endl ;
         curseur=curseur->suivant;
         }
+        fichier << "-1" << endl;
+        fichier << "-1" << endl;
 
         //récup nom joueur courant
-        if(leJeu.joueurCourant == &leJeu.joueur1) fichier << leJeu.joueur1.nom;
-        else fichier << leJeu.joueur2.nom << "\n";
-
+        fichier << leJeu.joueurCourant->nom;
     }
     else
     {
@@ -274,16 +278,20 @@ void chargementPartie(Jeu *leJeu){
             //
 
             //On lit les coordonnees du joueur 1 (int) depuis le fichier
-            Jeton *curseur=leJeu->joueur1.listeJetons;
-            while (curseur!=NULL){
-                int coord1, coord2;
+            //Jeton *curseur=leJeu->joueur1.listeJetons;
+            int tab_interm[2];
+            int coord1, coord2;
+            fichier >> coord1;
+            fichier >> coord2;
+            do{
+                tab_interm[0] = coord1;
+                tab_interm[1] = coord2;
+                cout << "1e coordonnees recup " << tab_interm[0] << " " << tab_interm[1] << endl ;
+                ajouteJetonJoueur(&(leJeu->joueur1),tab_interm);
                 fichier >> coord1;
                 fichier >> coord2;
-                curseur->coordonnees[0] = coord1;
-                curseur->coordonnees[1] = coord2;
-                cout << "1e coordonnees recup " << curseur->coordonnees[0] << " " << curseur->coordonnees[1] << endl ;
-                curseur=curseur->suivant;
             }
+            while (coord1!=(-1) && coord2!=(-1));
 
             //On lit le nom du joueur 2 (string) depuis le fichier
             string nom2;
@@ -304,16 +312,17 @@ void chargementPartie(Jeu *leJeu){
             cout << "2e couleur recup : " << leJeu->joueur2.couleur << endl ;
 
             //On lit les coordonnees du joueur 2 (int) depuis le fichier
-            curseur=leJeu->joueur2.listeJetons;
-            while (curseur!=NULL){
-                int coord1, coord2;
+            fichier >> coord1;
+            fichier >> coord2;
+            do{
+                tab_interm[0] = coord1;
+                tab_interm[1] = coord2;
+                cout << "2e coordonnees recup " << tab_interm[0] << " " << tab_interm[1] << endl ;
+                ajouteJetonJoueur(&(leJeu->joueur2),tab_interm);
                 fichier >> coord1;
                 fichier >> coord2;
-                curseur->coordonnees[0] = coord1;
-                curseur->coordonnees[1] = coord2;
-                cout << "2e coordonnees recup " << curseur->coordonnees[0] << " " << curseur->coordonnees[1] << endl ;
-                curseur=curseur->suivant;
-            }
+            } 
+            while (coord1!=(-1) && coord2!=(-1));
 
             //On lit le joueur courant (tab de char) depuis le fichier
             char courant[10];
@@ -325,7 +334,7 @@ void chargementPartie(Jeu *leJeu){
                 j++;
             } while (j!=10);
             fichier >> courant ; 
-            if ( strcmp (courant,(leJeu->joueur1.nom))) leJeu->joueurCourant=&(leJeu->joueur2); // on le compare avec les 2 noms
+            if ( strcmp (courant,(leJeu->joueur2.nom))==0) leJeu->joueurCourant=&(leJeu->joueur2); // on le compare avec les 2 noms
             else (leJeu->joueurCourant)=&(leJeu->joueur1);
             cout << "le joueur courant est " << (leJeu->joueurCourant->nom) << endl ;
 

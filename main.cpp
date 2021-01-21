@@ -8,7 +8,7 @@
 
 using namespace std;
 
-
+/*
 int main(){
     Jeu leJeu;
     int toursPasses = 0, actionSaisie = 0;
@@ -137,7 +137,7 @@ int main(){
     }
 
     return 0;
-}
+}*/
 
 bool saisieMenuCorrecte(int saisieUt){
     if(saisieUt != AUTRE_JOUEUR && saisieUt != ORDINATEUR && saisieUt != CHARGER_PARTIE){
@@ -207,7 +207,7 @@ void convertCoordonnees(char saisieUt[2], int coorCase[2]){
         }
     coorCase[1] = ((int)(saisieUt[1] - '0')) - 1;
 }
-/*
+
 int main(){
     Jeu leJeu;
     leJeu.mode = AUTRE_JOUEUR;
@@ -216,7 +216,7 @@ int main(){
     chargementPartie(&leJeu);
     return 0;
 }
-*/
+
 
 
 
