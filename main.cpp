@@ -16,10 +16,10 @@ int main(){
     bool partieTerminee = false;
 
     system("clear");
-    cout << JAUNE << "BIENVENUE DANS NOTRE JEU DE REVERSI !" << ANNULE_COULEUR << endl;
+    cout << CYAN << "BIENVENUE DANS NOTRE JEU DE REVERSI !" << ANNULE_COULEUR << endl;
     cout << endl;
     cout << endl;
-    cout << CYAN << "MENU PRINCIPAL" << ANNULE_COULEUR << endl;
+    cout << MAGENTA << "MENU PRINCIPAL" << ANNULE_COULEUR << endl;
     cout << endl;
     cout << " 1 - Lancer une partie contre un autre joueur." << endl;
     cout << " 2 - Lancer une partie conte Michelle (Ordinateur)." << endl;
@@ -39,7 +39,7 @@ int main(){
         cout << endl;
         // DÉBUT DU TOUR
         // Affichage des informations sur le joueur courant
-        cout << JAUNE << "NOUVEAU TOUR DE JEU:" << ANNULE_COULEUR << endl;
+        cout << CYAN << "NOUVEAU TOUR DE JEU:" << ANNULE_COULEUR << endl;
         cout << "Joueur courant: " << leJeu.joueurCourant->nom << endl;
         cout << "Nombre de jeton(s) du joueur courant: " << leJeu.joueurCourant->nbJeton << endl;
 

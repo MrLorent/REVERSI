@@ -47,13 +47,13 @@ void affichePlateau(Jeton * plateau[MAXLARGEUR][MAXLARGEUR]){
             switch (plateau[l][c]->couleur)
             {
             case 'b':
-                cout << CYAN << " X " << ANNULE_COULEUR << "|";
+                cout << " X " << "|";
                 break;
             case 'n':
-                cout << MAGENTA << " O " << ANNULE_COULEUR << "|";
+                cout << " O " << "|";
                 break;
             case 'j':
-                cout << JAUNE << " * " << ANNULE_COULEUR << "|";
+                cout << " * " << "|";
                 break;
             default:
                 cout << "   |";
