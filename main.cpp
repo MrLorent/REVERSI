@@ -11,131 +11,161 @@ int main(){
     Jeu leJeu;
     int toursPasses = 0, actionSaisie = 0;
     int coorSaisie[2];
-    char passer = 'n';
-    char caseSaisie[2], nomTmp[20];
-    bool partieTerminee = false;
+    char saisieUt[2];
+    bool partieTerminee = false, premierPassage = true, quitter = false;
+
 
     system("clear");
     cout << CYAN << "BIENVENUE DANS NOTRE JEU DE REVERSI !" << ANNULE_COULEUR << endl;
     cout << endl;
     cout << endl;
-    cout << MAGENTA << "MENU PRINCIPAL" << ANNULE_COULEUR << endl;
-    cout << endl;
-    cout << " 1 - Lancer une partie contre un autre joueur." << endl;
-    cout << " 2 - Lancer une partie conte Michelle (Ordinateur)." << endl;
-    cout << endl;
-    cout << "Veuillez saisir le numéro de l'action que vous souhaitez réaliser :" << endl;
     do{
-        cin >> actionSaisie;
-    }while(!saisieMenuCorrecte(actionSaisie));
-
-    leJeu.mode = actionSaisie;
-    system("clear");
-
-    initJeu(&leJeu);
-    
-    do{
-        system("clear");
+        cout << MAGENTA << "MENU PRINCIPAL" << ANNULE_COULEUR << endl;
         cout << endl;
-        // DÉBUT DU TOUR
-        // Affichage des informations sur le joueur courant
-        cout << CYAN << "NOUVEAU TOUR DE JEU:" << ANNULE_COULEUR << endl;
-        cout << "Joueur courant: " << leJeu.joueurCourant->nom << endl;
-        cout << "Nombre de jeton(s) du joueur courant: " << leJeu.joueurCourant->nbJeton << endl;
+        cout << "1 - Lancer une partie contre un autre joueur." << endl;
+        cout << "2 - Lancer une partie conte Michelle (Ordinateur)." << endl;
+        cout << "3 - Charger la dernière partie en cours." << endl;
+        cout << endl;
+        cout << "Veuillez saisir le numéro de l'action que vous souhaitez réaliser :" << endl;
+        do{
+            cin >> actionSaisie;
+        }while(!saisieMenuCorrecte(actionSaisie));
 
-        // Mise à jour des données du plateau
-        ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
-        ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
+        system("clear");
+        if (actionSaisie == CHARGEMENT){
+            initPlateau(leJeu.plateau);
+            chargementPartie(&leJeu);
+        }else{
+            initJeu(&leJeu);
+            leJeu.mode = actionSaisie;
+        }
+        
+        do{
+            system("clear");
 
-        if(analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &leJeu.coupsJouables)){
-            ajouteCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
-            
-            if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
-                CoupJouable * coupAJouer = leJeu.coupsJouables;
-                CoupJouable * tmp = leJeu.coupsJouables;
+            premierPassage = true;
+            cout << endl;
+            // DÉBUT DU TOUR
+            // Affichage des informations sur le joueur courant
+            cout << CYAN << "NOUVEAU TOUR DE JEU:" << ANNULE_COULEUR << endl;
+            cout << "Joueur courant: " << leJeu.joueurCourant->nom << endl;
+            cout << "Nombre de jeton(s) du joueur courant: " << leJeu.joueurCourant->nbJeton << endl;
 
-                while(tmp != NULL){
-                    if(tmp->nbCaptures > coupAJouer->nbCaptures){
-                        coupAJouer = tmp;
+            // Mise à jour des données du plateau
+            ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
+            ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
+
+            if(analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &leJeu.coupsJouables)){
+                ajouteCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
+                
+                if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
+                    CoupJouable * coupAJouer = leJeu.coupsJouables;
+                    CoupJouable * tmp = leJeu.coupsJouables;
+
+                    while(tmp != NULL){
+                        if(tmp->nbCaptures > coupAJouer->nbCaptures){
+                            coupAJouer = tmp;
+                        }
+                        tmp = tmp->suivant;
                     }
-                    tmp = tmp->suivant;
+
+                    joueLeCoup(leJeu.plateau, coupAJouer->emplacement->coordonnees, &leJeu.joueur2, &leJeu.joueur1);
+
+                    // Affichage du plateau
+                    ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
+                    ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
+                    affichePlateau(leJeu.plateau);
+
+                    // FIN DU TOUR
+                    do{
+                        if(premierPassage){
+                            cout << "Michelle vient de vous capturer " << coupAJouer->nbCaptures << " jetons." << endl;
+                            premierPassage = false;
+                        }else{
+                            cout << "Votre énervement ne changera rien... Il faut tourner la page maintenant." << endl;
+                        }
+                        cout << "Passer à la suite ? (o/n)" << endl;
+                        cin >> saisieUt;
+                    }while(saisieUt[0] != 'o' && saisieUt[0] != 'O');
+                }else{
+                    // Affichage du plateau
+                    affichePlateau(leJeu.plateau);
+
+                    // DÉROULÉ DU TOUR
+                    cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
+                    do{
+                        cin >> saisieUt;
+                    }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
+                    joueLeCoup(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente);
                 }
 
-                joueLeCoup(leJeu.plateau, coupAJouer->emplacement->coordonnees, &leJeu.joueur2, &leJeu.joueur1);
-
-                // Affichage du plateau
-                ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
-                ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
-                affichePlateau(leJeu.plateau);
-
                 // FIN DU TOUR
-                cout << "Michelle vient de vous capturer " << coupAJouer->nbCaptures << " jetons." << endl;
-                cout << "Passer à la suite ? (o/n)" << endl;
-                do{
-                    cin >> passer;
-                }while(passer != 'o');
+                toursPasses = 0;
+                retireCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
             }else{
+
                 // Affichage du plateau
                 affichePlateau(leJeu.plateau);
 
-                // DÉROULÉ DU TOUR
-                cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
-                do{
-                    cin >> caseSaisie;
-                }while(!saisieCorrecte(leJeu.plateau, caseSaisie, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
-                joueLeCoup(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente);
+                    do{
+                        if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
+                            if(premierPassage){
+                                cout << "Malheureusement pour elle, Michelle n'a aucun coup jouable." << endl;
+                                premierPassage = false;
+                            }else{
+                                cout << "Savourez cette petite victiore... mais pas trop longtemps non plus !" << endl;
+                            }
+                            cout << "Passer à la suite ? (o/n)" << endl;
+                        }else{
+                            if(premierPassage){
+                                cout << "Malheureseument, vous n'avez aucun coup jouable..." << endl;
+                                premierPassage = false;
+                            }else{
+                                cout << "Votre énervement ne changera rien... Il faut tourner la page maintenant." << endl;
+                            }
+                            cout << "Passer à la suite ? (o/n)" << endl;
+                            }
+                        cin >> saisieUt;
+                    }while(saisieUt[0] != 'o' && saisieUt[0] != 'O');
+                
+                toursPasses++;
             }
+            // Passage au tour suivant
+            changeJoueurCourant(&leJeu);
+            if(leJeu.joueur1.nbJeton + leJeu.joueur2.nbJeton == 64 || toursPasses == 2){
+                partieTerminee = true;
+            }
+        }while(!partieTerminee);
 
-            // FIN DU TOUR
-            toursPasses = 0;
-            retireCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
+        system("clear");
+
+        cout << "PARTIE TERMINÉE !" << endl;
+        ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
+        ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
+        affichePlateau(leJeu.plateau);
+
+        if(leJeu.joueur1.nbJeton  > leJeu.joueur2.nbJeton){
+            cout << "Le grand gagnant est " << leJeu.joueur1.nom << " avec " << leJeu.joueur1.nbJeton << " jetons contre " << leJeu.joueur2.nbJeton << " ! Félicitations à lui !" << endl;
         }else{
-
-            // Affichage du plateau
-            affichePlateau(leJeu.plateau);
-
-                do{
-                    if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
-                        cout << "Malheureusement pour elle, Michelle n'a aucun coup jouable..." << endl;
-                        cout << "Passer au tour suivant ? (o/n)" << endl;
-                    }else{
-                        cout << "Malheureusement vous n'avez aucun coup jouable..." << endl;
-                        cout << "Passer au tour suivant ? (o/n)" << endl;
-                    }
-                    cin >> passer;
-                }while(passer != 'o');
-            
-            toursPasses++;
+            if(leJeu.joueur1.nbJeton  < leJeu.joueur2.nbJeton){
+                cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " ! Félicitations à lui !" << endl;
+            }else{
+                cout << "C'est une égalité ! Félicitaion à vous deux ! " << endl;
+            }
         }
-        // Passage au tour suivant
-        changeJoueurCourant(&leJeu);
-        if(leJeu.joueur1.nbJeton + leJeu.joueur2.nbJeton == 64 || toursPasses == 2){
-            partieTerminee = true;
-        }
-    }while(!partieTerminee);
+        do{
+            cout << "retour au menu principal ? (o/n)" << endl;
+            cin >> saisieUt;
+        }while(saisieUt[0] != 'o' && saisieUt[0] != 'O');
 
-    system("clear");
-
-    cout << "PARTIE TERMINÉE !" << endl;
-    ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
-    ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
-    affichePlateau(leJeu.plateau);
-
-    if(leJeu.joueur1.nbJeton  > leJeu.joueur2.nbJeton){
-        cout << "Le grand gagnant est " << leJeu.joueur1.nom << " avec " << leJeu.joueur1.nbJeton << " jetons contre " << leJeu.joueur2.nbJeton << " ! Félicitations à lui !" << endl;
-    }else{
-        if(leJeu.joueur1.nbJeton  < leJeu.joueur2.nbJeton){
-            cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " ! Félicitations à lui !" << endl;
-        }else{
-            cout << "C'est une égalité ! Félicitaion à vous deux ! " << endl;
-        }
-    }
+        system("clear");
+    }while(!quitter);
 
     return 0;
 }
 
 bool saisieMenuCorrecte(int saisieUt){
-    if(saisieUt != AUTRE_JOUEUR && saisieUt != ORDINATEUR){
+    if(saisieUt != HUMAIN && saisieUt != ORDINATEUR && saisieUt != CHARGEMENT){
         cout << "Erreur: Veuillez saisir un numéro correspondant à l'une des propositions ci-dessus :" << endl;
         return false;
     }else{

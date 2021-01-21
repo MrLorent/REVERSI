@@ -31,4 +31,8 @@ bool saisieMenuCorrecte(int saisieUt);
 bool saisieCorrecte(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]);
 void convertCoordonnees(char saisieUt[2], int saisieTraduite[2]);
 
+// SAUVEGARDE
+void sauvegardePartie(Jeu leJeu);
+void chargementPartie(Jeu *leJeu);
+
 #endif

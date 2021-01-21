@@ -19,7 +19,7 @@ void initJeu(Jeu * unJeu){
 	ajouteJetonJoueur(&unJeu->joueur1, coor1);
 	ajouteJetonJoueur(&unJeu->joueur1, coor2);
 
-    if(unJeu->mode == AUTRE_JOUEUR){
+    if(unJeu->mode == HUMAIN){
         // Initialisation du second joueur et de ses deux premiers jetons
         cout << endl;
         cout << CYAN << "ENREGISTREMENT DU SECOND JOUEUR :" << ANNULE_COULEUR << endl;
