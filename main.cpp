@@ -1,10 +1,13 @@
 #include <iostream>
 #include <cstring>
+#include <fstream>
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
 
+
 using namespace std;
+
 
 int main(){
     Jeu leJeu;
@@ -22,84 +25,15 @@ int main(){
     cout << endl;
     cout << " 1 - Lancer une partie contre un autre joueur." << endl;
     cout << " 2 - Lancer une partie conte Michelle (Ordinateur)." << endl;
-    cout << " 3 - Continuer une partie non terminee."
+    cout << " 3 - Continuer une partie non terminee." << endl;
     cout << endl;
     cout << "Veuillez saisir le numéro de l'action que vous souhaitez réaliser :" << endl;
     do{
         cin >> actionSaisie;
     }while(!saisieMenuCorrecte(actionSaisie));
 
-    if (actionSaisie==CHARGER_PARTIE){
-        ifstream fichier("./Sauvegarde.txt");
-        if(fichier)
-        {
-            //L'ouverture s'est bien passée, on peut donc lire
-
-            //On lit le mode de jeu (int) depuis le fichier
-            int modeCharge;
-            fichier >> modeCharge;          
-            leJeu.mode = modeCharge;
-            //On lit le nom du joueur 1 (string) depuis le fichier
-            string nom;
-            fichier >> nom ;          
-            leJeu.joueur1.nom=nom;
-            //On lit la couleur du joueur 1 (char) depuis le fichier
-            string couleur;
-            fichier >> couleur ;          
-            leJeu.joueur1.couleur= couleur;
-            //On lit les coordonnees du joueur 1 (int) depuis le fichier
-            Jeton *curseur=leJeu.joueur1->ListeJetons;
-            int i = 1;
-            while (i!=leJeu.joueur1.nbJeton){
-                int coord1, coord2;
-                fichier >> coord1;
-                fichier >> coord2;
-                curseur->jeton.coordonnées[1]=coord1;
-                curseur->jeton.coordonnées[2]=coord2;
-                curseur=curseur->suivant;
-                i++;
-            }
-
-            //On lit le nom du joueur 2 (string) depuis le fichier
-            string nom;
-            fichier >> nom ;          
-            leJeu.joueur2.nom=nom;
-            //On lit la couleur du joueur 2 (char) depuis le fichier
-            string couleur;
-            fichier >> couleur ;          
-            leJeu.joueur2.couleur= couleur;
-            //On lit les coordonnees du joueur 2 (int) depuis le fichier
-            Jeton *curseur=leJeu.joueur2->ListeJetons;
-            int i = 1;
-            while (i!=leJeu.joueur2.nbJeton){
-                int coord1, coord2;
-                fichier >> coord1;
-                fichier >> coord2;
-                curseur->jeton.coordonnées[1]=coord1;
-                curseur->jeton.coordonnées[2]=coord2;
-                curseur=curseur->suivant;
-                i++;
-            }
-
-            //On lit le joueur courant (string) depuis le fichier
-            string courant;
-            fichier >> courant ;          
-            leJeu->joueurCourant=courant;
-
-            //On lit le joueur en attente (string) depuis le fichier
-            string attente;
-            fichier >> attente ;          
-            leJeu->joueurEnAttente=attente;
-
-            cout << "La derniere partie a ete chargee. Vous pouvez maintenant la reprendre." << endl;
-        }
-
-        else
-        {
-            cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
-        }
-
-    } else {
+    if (actionSaisie==CHARGER_PARTIE) chargementPartie (&leJeu);
+    else {
         leJeu.mode = actionSaisie;
         system("clear");
         initJeu(&leJeu);
@@ -273,3 +207,17 @@ void convertCoordonnees(char saisieUt[2], int coorCase[2]){
         }
     coorCase[1] = ((int)(saisieUt[1] - '0')) - 1;
 }
+/*
+int main(){
+    Jeu leJeu;
+    leJeu.mode = AUTRE_JOUEUR;
+    initJeu(&leJeu);
+    sauvegardePartie(leJeu);
+    chargementPartie(&leJeu);
+    return 0;
+}
+*/
+
+
+
+

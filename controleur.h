@@ -26,9 +26,15 @@ void videListeJetons(ListeJetons * uneListe);
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 
+//PARTIE
+void sauvegardePartie(Jeu leJeu);
+void chargementPartie(Jeu *leJeu);
+
 // MAIN
 bool saisieMenuCorrecte(int saisieUt);
 bool saisieCorrecte(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]);
 void convertCoordonnees(char saisieUt[2], int saisieTraduite[2]);
+
+
 
 #endif
