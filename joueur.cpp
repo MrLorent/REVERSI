@@ -64,3 +64,33 @@ void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 		tmp = tmp->suivant;
 	}
 }
+
+int ordinateurJoue(Jeu * leJeu){
+	int nbCoupsJouables = 0;
+	bool coupsIdentiques = true;
+	CoupJouable * coupAJouer = leJeu->coupsJouables;
+	CoupJouable * tmp = leJeu->coupsJouables;
+
+	while(tmp != NULL){
+		if(tmp->nbCaptures > coupAJouer->nbCaptures){
+			coupAJouer = tmp;
+			coupsIdentiques = false;
+		}
+		nbCoupsJouables++;
+		tmp = tmp->suivant;
+	}
+
+	tmp = leJeu->coupsJouables;
+
+	if (coupsIdentiques){
+		int rang = rand()%nbCoupsJouables;
+		for(int i=0; i<rang; i++){
+			tmp = tmp->suivant;
+		}
+		coupAJouer = tmp;
+	}
+
+	joueLeCoup(leJeu->plateau, coupAJouer->emplacement->coordonnees, &leJeu->joueur2, &leJeu->joueur1);
+
+	return coupAJouer->nbCaptures;
+}

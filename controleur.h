@@ -25,6 +25,7 @@ void videListeJetons(ListeJetons * uneListe);
 // JOUEUR
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
+int ordinateurJoue(Jeu * leJeu);
 
 // MAIN
 bool saisieMenuCorrecte(int saisieUt);
