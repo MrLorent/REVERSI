@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 #include <cstring>
 #include "modele.h"
 #include "vue.h"
@@ -58,18 +59,38 @@ int main(){
             ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
             ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
 
+            if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
+                cout << endl;
+                cout << "Voici le plateau suite à votre précédent tour :" << endl;
+                affichePlateau(leJeu.plateau);
+            }
+
             if(analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &leJeu.coupsJouables)){
                 ajouteCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
                 
                 if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
+                    int nbCoupsJouables = 0;
+                    bool coupsIdentiques = true;
                     CoupJouable * coupAJouer = leJeu.coupsJouables;
                     CoupJouable * tmp = leJeu.coupsJouables;
 
                     while(tmp != NULL){
                         if(tmp->nbCaptures > coupAJouer->nbCaptures){
                             coupAJouer = tmp;
+                            coupsIdentiques = false;
                         }
+                        nbCoupsJouables++;
                         tmp = tmp->suivant;
+                    }
+
+                    tmp = leJeu.coupsJouables;
+
+                    if (coupsIdentiques){
+                        int rang = rand()%nbCoupsJouables;
+                        for(int i=0; i<rang; i++){
+                            tmp = tmp->suivant;
+                        }
+                        coupAJouer = tmp;
                     }
 
                     joueLeCoup(leJeu.plateau, coupAJouer->emplacement->coordonnees, &leJeu.joueur2, &leJeu.joueur1);
@@ -77,17 +98,19 @@ int main(){
                     // Affichage du plateau
                     ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
                     ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
+                    cout << "Voici le plateau suite au tour de Michelle :" << endl;
                     affichePlateau(leJeu.plateau);
 
                     // FIN DU TOUR
                     do{
                         if(premierPassage){
-                            cout << "Michelle vient de vous capturer " << coupAJouer->nbCaptures << " jetons." << endl;
+                            cout << "Elle vous a capturé " << coupAJouer->nbCaptures << " jetons." << endl;
                             premierPassage = false;
                         }else{
                             cout << "Votre énervement ne changera rien... Il faut tourner la page maintenant." << endl;
                         }
-                        cout << "Passer à la suite ? (o/n)" << endl;
+                        cout << "Quitter la partie = 'q'" << endl;
+                        cout << "Passer à la suite = 'o'" << endl;
                         cin >> saisieUt;
                         if(tolower(saisieUt[0]) == 'q'){
                             partieQuittee = quitterPartie(&leJeu);
@@ -98,6 +121,7 @@ int main(){
                     affichePlateau(leJeu.plateau);
 
                     // DÉROULÉ DU TOUR
+                    cout << "Quitter la partie = 'q'" << endl;
                     cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
                     do{
                         cin >> saisieUt;
@@ -108,11 +132,11 @@ int main(){
                     if(!partieQuittee){
                         joueLeCoup(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente);
                     }
+                    
+                    // FIN DU TOUR
+                    toursPasses = 0;
+                    retireCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
                 }
-
-                // FIN DU TOUR
-                toursPasses = 0;
-                retireCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
             }else{
 
                 // Affichage du plateau
@@ -126,7 +150,8 @@ int main(){
                             }else{
                                 cout << "Savourez cette petite victiore... mais pas trop longtemps non plus !" << endl;
                             }
-                            cout << "Passer à la suite ? (o/n)" << endl;
+                            cout << "Quitter la partie = 'q'" << endl;
+                            cout << "Passer à la suite = 'o'" << endl;
                         }else{
                             if(premierPassage){
                                 cout << "Malheureseument, vous n'avez aucun coup jouable..." << endl;
@@ -134,7 +159,8 @@ int main(){
                             }else{
                                 cout << "Votre énervement ne changera rien... Il faut tourner la page maintenant." << endl;
                             }
-                            cout << "Passer à la suite ? (o/n)" << endl;
+                            cout << "Quitter la partie = 'q'" << endl;
+                            cout << "Passer à la suite = 'o'" << endl;
                             }
                         cin >> saisieUt;
                         if(tolower(saisieUt[0]) == 'q'){
@@ -171,7 +197,7 @@ int main(){
             do{
                 cout << "retour au menu principal ? (o/n)" << endl;
                 cin >> saisieUt;
-            }while(saisieUt[0] != 'o' && saisieUt[0] != 'O');
+            }while(tolower(saisieUt[0]) != 'o');
         }
 
         system("clear");

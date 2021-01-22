@@ -27,7 +27,6 @@ void ajouteJetonCapture(ListeJetons * liste, int coorJetonCapture[2]){
 	nouvelleCapture->coordonnees[0] = coorJetonCapture[0];
 	nouvelleCapture->coordonnees[1] = coorJetonCapture[1];
 	nouvelleCapture->suivant = *liste;
-	nouvelleCapture->suivant = NULL;
 	*liste = nouvelleCapture;
 }
 
