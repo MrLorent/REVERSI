@@ -139,9 +139,11 @@ void enregistreCoupJouable(ListeCoupsJouables * laListe, Marqueur * emplacement,
 	int rang = estEnregistre(laListe, emplacement->coordonnees);
 
 	if(rang >= 0){
-		CoupJouable * leCoupJouable;
+		CoupJouable * leCoupJouable = *laListe;
 
-        recupereCoupJouable(*laListe, rang, leCoupJouable);
+        for(int i=0; i<rang-1; i++){
+            leCoupJouable = leCoupJouable->suivant;
+        }
 
 		leCoupJouable->nbCaptures = leCoupJouable->nbCaptures + nbCaptures;
 
@@ -171,15 +173,6 @@ int estEnregistre(ListeCoupsJouables * coupsJouables, int coorEmplacement[2]){
 	}else{
 		return -1;
 	}
-}
-
-void recupereCoupJouable(ListeCoupsJouables uneListe, int rang, CoupJouable * leCoupCherche){
-
-    for(int i=0; i<rang-1; i++){
-        uneListe = uneListe->suivant;
-    }
-
-    leCoupCherche = uneListe;
 }
 
 bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){
