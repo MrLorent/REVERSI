@@ -8,6 +8,16 @@ using namespace std;
 
 
 // MODÈLE
+
+/**
+ * Initialise le jeu passé en paramètre:
+ * - Initialise le joueur 1
+ * - Initialise le joueur 2 (Humain ou ordinateur)
+ * - Implémente les jetons de base à chaque joueur
+ * - Initialise le joueur courant
+ * - Initialise le joueur en attente
+ * - Initialise le mode de la partie
+*/
 void initJeu(Jeu * unJeu){
 	int coor1[2]={3,3}, coor2[2]={4,4}, coor3[2]={3,4}, coor4[2]={4,3};
 
@@ -18,12 +28,14 @@ void initJeu(Jeu * unJeu){
 	ajouteJetonJoueur(&unJeu->joueur1, coor1);
 	ajouteJetonJoueur(&unJeu->joueur1, coor2);
 
+    // Initialisation du second joueur et de ses deux premiers jetons
     if(unJeu->mode == HUMAIN){
-        // Initialisation du second joueur et de ses deux premiers jetons
+        // Dans le cas d'une partie face à un autre joueur:
         cout << endl;
         cout << CYAN << "ENREGISTREMENT DU SECOND JOUEUR :" << ANNULE_COULEUR << endl;
         initJoueur(&unJeu->joueur2, 'n');
     }else{
+        // Dans le cas d'une partie face à l'ordinateur:
         initOrdinateur(&unJeu->joueur2);
     }
     ajouteJetonJoueur(&unJeu->joueur2, coor3);
@@ -41,6 +53,10 @@ void initJeu(Jeu * unJeu){
 }
 
 // CONTROLEURS
+
+/**
+ * Change le joueur courant du jeu passé en paramètre
+*/
 void changeJoueurCourant(Jeu * unJeu){
 	if(strcmp(unJeu->joueurCourant->nom, (*unJeu).joueur1.nom) == 0 ){
 		unJeu->joueurCourant = &unJeu->joueur2;
@@ -51,16 +67,25 @@ void changeJoueurCourant(Jeu * unJeu){
 	}
 }
 
+/**
+ * Enregistre les coups jouables d'un joueur sur un tour, et le nombre de jetons compturés par coup dans la liste de coups jouables fournie en paramètre
+*/
 bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joueurCourant, Joueur * adversaire, ListeCoupsJouables * coupsJouables){
     Jeton * tmp = joueurCourant->listeJetons;
 
+    // Pour chaque jetons de la liste du joueur courant
     while(tmp != NULL){
         Jeton * leCoupJouable = NULL;
 
+        // On parcourt les 8 cases adjacentes
         for(int direction=0; direction<8;direction++){
+            // On regarde si l'une d'entre elle contient un jeton adverse
             if(caseExiste(tmp->coordonnees[0]+VECTEURS[direction][0], tmp->coordonnees[1]+VECTEURS[direction][1]) && plateau[tmp->coordonnees[1]+VECTEURS[direction][1]][tmp->coordonnees[0]+VECTEURS[direction][0]]->couleur == adversaire->couleur){
                 int count = 0;
-                if(directionJouable(plateau, tmp->coordonnees, direction, &count, adversaire->couleur, 'v')){
+
+                // Si l'on détecte un jeton adverse, on verifie si cette direction aboutie à une case vide
+                if(directionJouable(plateau, tmp, direction, &count, adversaire->couleur)){
+                    // Si l'on aboutie à une case vide, on récupère sa position et on l'enregistre comme coups jouable avec le nombre de jetons qu'elle permet de capturer
                     leCoupJouable = plateau[tmp->coordonnees[1]+VECTEURS[direction][1]*(count+1)][tmp->coordonnees[0]+VECTEURS[direction][0]*(count+1)];
                     enregistreCoupJouable(coupsJouables, leCoupJouable, count);
                 }
@@ -69,6 +94,7 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
         tmp = tmp->suivant;
     }
 
+    // Si il y a au moins un coups jouable, on confirme que le joueur courant peux jouer
     if(*coupsJouables != NULL){
         return true;
     }else{
@@ -77,20 +103,24 @@ bool analyseCoupsJouables(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Joueur * joue
     
 }
 
-bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2], int uneDirection, int * count, char couleurAdversaire, char objectif){
+/**
+ * Vérifie si la direction fournie à partir d'une position donnée aboutie bien à une case vide en comptant le nombre de case parcourue 
+*/
+bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Jeton * position, int uneDirection, int * count, char couleurAdversaire){
     Jeton * caseSuivante;
-    int coorCaseSuivante[2];
     
-    if(caseExiste(caseDepart[0] + VECTEURS[uneDirection][0], caseDepart[1] + VECTEURS[uneDirection][1])){
-        caseSuivante = plateau[caseDepart[1] + VECTEURS[uneDirection][1]][caseDepart[0] + VECTEURS[uneDirection][0]];
-        coorCaseSuivante[0] = caseDepart[0] + VECTEURS[uneDirection][0];
-        coorCaseSuivante[1] = caseDepart[1] + VECTEURS[uneDirection][1];
+    // On vérifie que la case suivante existe bien dans le tableau
+    if(caseExiste(position->coordonnees[0] + VECTEURS[uneDirection][0], position->coordonnees[1] + VECTEURS[uneDirection][1])){
+        caseSuivante = plateau[position->coordonnees[1] + VECTEURS[uneDirection][1]][position->coordonnees[0] + VECTEURS[uneDirection][0]];
 
+        // Si la case suivante contient encore un jeton adverse, alors on continue d'avancer
         if(caseSuivante->couleur == couleurAdversaire){
+            // On met à jour le nombre de jetons parcourus (jetons captures éventuels)
             (*count)++;
-            return directionJouable(plateau, coorCaseSuivante, uneDirection, count, couleurAdversaire, objectif);
+            return directionJouable(plateau, caseSuivante, uneDirection, count, couleurAdversaire);
         }else{
-            if(caseSuivante->couleur == objectif){
+            // Si la case suivante est vide, alors le coup est jouable (=true), sinon il n'est pas jouable (=false)
+            if(caseSuivante->couleur == 'v'){
                 return true;
             }else{
                 return false;
@@ -101,24 +131,26 @@ bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int caseDepart[2]
     }
 }
 
-void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, int nbCaptures){
-	int rang = estEnregistre(liste, emplacement->coordonnees);
+/**
+ * Ajoute un nouveau coup jouable à la liste de coups jouables passés en paramètre
+ * Si le coup existe déjà, seul le nombre capture du coup déjà enregistré est mis à jour
+*/
+void enregistreCoupJouable(ListeCoupsJouables * laListe, Marqueur * emplacement, int nbCaptures){
+	int rang = estEnregistre(laListe, emplacement->coordonnees);
 
 	if(rang >= 0){
-		CoupJouable * coupJouabletmp = *liste;
+		CoupJouable * leCoupJouable;
 
-		for(int i=0; i<rang-1; i++){
-            coupJouabletmp = coupJouabletmp->suivant;
-        }
+        recupereCoupJouable(*laListe, rang, leCoupJouable);
 
-		coupJouabletmp->nbCaptures = coupJouabletmp->nbCaptures + nbCaptures;
+		leCoupJouable->nbCaptures = leCoupJouable->nbCaptures + nbCaptures;
 
 	}else{
 		CoupJouable * nouveauCoup = new CoupJouable;
 		nouveauCoup->emplacement = emplacement;
 		nouveauCoup->nbCaptures = nbCaptures;
-		nouveauCoup->suivant = *liste;
-		*liste = nouveauCoup;
+		nouveauCoup->suivant = *laListe;
+		*laListe = nouveauCoup;
 	}
 }
 
@@ -139,6 +171,15 @@ int estEnregistre(ListeCoupsJouables * coupsJouables, int coorEmplacement[2]){
 	}else{
 		return -1;
 	}
+}
+
+void recupereCoupJouable(ListeCoupsJouables uneListe, int rang, CoupJouable * leCoupCherche){
+
+    for(int i=0; i<rang-1; i++){
+        uneListe = uneListe->suivant;
+    }
+
+    leCoupCherche = uneListe;
 }
 
 bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire){

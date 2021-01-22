@@ -222,10 +222,12 @@ int main(){
 }
 
 bool saisieMenuCorrecte(int saisieUt){
+    // On vérifie que la saisie correspond bien à un des cas possibles
     if(saisieUt != HUMAIN && saisieUt != ORDINATEUR && saisieUt != CHARGEMENT && saisieUt != QUITTER){
         cout << "Erreur: Veuillez saisir un numéro correspondant à l'une des propositions ci-dessus :" << endl;
         return false;
     }else{
+        // L'utilisateur choisi de chargé une partie, on vérifie qu'une sauvegarde existe bien
         if(saisieUt == CHARGEMENT){
             ifstream fichier("./sauvegarde.txt");
             if(fichier){
@@ -271,6 +273,7 @@ bool saisieCorrecte(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], i
 }
 
 void convertCoordonnees(char saisieUt[2], int coorCase[2]){
+    // On converit les coordonnées de char à int en prenant en compte le décalage en -1 des tableaux
     switch (saisieUt[0])
         {
         case 'a':
@@ -311,9 +314,13 @@ bool quitterPartie(Jeu * leJeu){
     }while(tolower(saisieUt) != 'o' && tolower(saisieUt) != 'n');
 
     if(saisieUt == 'o'){
+        // Si l'utilisateur quitte la partie, on sauvegarde la partie en cours:
+
+        // Dans le cas où la partie est quitté alors que le joueur courant est l'ordinateur, on change de joueur afin que l'ordinateur ne rejoue pas une seconde fois au chargement de la partie
         if(leJeu->mode == ORDINATEUR && leJeu->joueurCourant->nom == leJeu->joueur2.nom){
             changeJoueurCourant(leJeu);
         }
+        // On sauvegarde la partie en cours
         sauvegardePartie(*leJeu);
         return true;
     }else{
