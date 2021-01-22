@@ -3,6 +3,7 @@
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
+#include "couleur.h"
 
 using namespace std;
 
@@ -13,15 +14,15 @@ void initJeu(Jeu * unJeu){
 
 	// Initialisation du premier joueur et de ses deux premiers jetons
 	cout << endl;
-	cout << "ENREGISTREMENT DU PREMIER JOUEUR :" << endl;
+	cout << CYAN << "ENREGISTREMENT DU PREMIER JOUEUR :" << ANNULE_COULEUR <<endl;
 	initJoueur(&unJeu->joueur1, 'b');
 	ajouteJetonJoueur(&unJeu->joueur1, coor1);
 	ajouteJetonJoueur(&unJeu->joueur1, coor2);
 
-    if(unJeu->mode == AUTRE_JOUEUR){
+    if(unJeu->mode == HUMAIN){
         // Initialisation du second joueur et de ses deux premiers jetons
         cout << endl;
-        cout << "ENREGISTREMENT DU SECOND JOUEUR :" << endl;
+        cout << CYAN << "ENREGISTREMENT DU SECOND JOUEUR :" << ANNULE_COULEUR << endl;
         initJoueur(&unJeu->joueur2, 'n');
     }else{
         initOrdinateur(&unJeu->joueur2);
@@ -173,7 +174,6 @@ void joueLeCoup(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int coorJetonPlace[2], 
 
 bool directionCapture(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeJetons* jetonsCaptures, int position[2], int uneDirection, char couleurAdversaire, char objectif){
     Jeton* caseSuivante;
-    int coorCaseSuivante[2];
     
     if(caseExiste(position[0] + VECTEURS[uneDirection][0], position[1] + VECTEURS[uneDirection][1])){
         caseSuivante = plateau[position[1] + VECTEURS[uneDirection][1]][position[0] + VECTEURS[uneDirection][0]];

@@ -3,6 +3,8 @@
 
 #include "modele.h"
 
+using namespace std;
+
 // JEU
 
 // PLATEAU

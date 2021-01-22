@@ -33,8 +33,10 @@ typedef struct Joueur{
 }Joueur;
 
 const int MAXLARGEUR = 8;
-const int AUTRE_JOUEUR = 1;
+const int HUMAIN = 1;
 const int ORDINATEUR = 2;
+const int CHARGEMENT = 3;
+const int QUITTER = 4;
 typedef struct Jeu{
     Joueur joueur1;
     Joueur joueur2;

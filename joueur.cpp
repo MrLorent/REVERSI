@@ -3,12 +3,14 @@
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
+#include "couleur.h"
+
 
 using namespace std;
 
 // MODELES
 void initJoueur(Joueur * unJoueur, char uneCouleur){
-	cout << "Veuillez entrer le nom du joueur:" << endl;
+	cout << MAGENTA << "Veuillez entrer le nom du joueur:" << ANNULE_COULEUR << endl;
 	cin >> unJoueur->nom;
 	unJoueur->couleur = uneCouleur;
 	unJoueur->nbJeton = 0;
@@ -37,12 +39,7 @@ void afficheJoueur(Joueur joueur){
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	Jeton * nouveauJeton = new Jeton;
 	initJeton(nouveauJeton, unJoueur->couleur, coordonnees);
-	
-	if(unJoueur->listeJetons != NULL){
-		nouveauJeton->suivant = unJoueur->listeJetons;
-	}else{
-		nouveauJeton->suivant = NULL;
-	}
+	nouveauJeton->suivant = unJoueur->listeJetons;
 	unJoueur->listeJetons = nouveauJeton;
 	(unJoueur->nbJeton)++;
 }
