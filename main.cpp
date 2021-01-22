@@ -42,7 +42,6 @@ int main(){
         
         do{
             system("clear");
-
             premierPassage = true;
             cout << endl;
             // DÉBUT DU TOUR

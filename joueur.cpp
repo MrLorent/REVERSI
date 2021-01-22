@@ -39,12 +39,7 @@ void afficheJoueur(Joueur joueur){
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	Jeton * nouveauJeton = new Jeton;
 	initJeton(nouveauJeton, unJoueur->couleur, coordonnees);
-	
-	if(unJoueur->listeJetons != NULL){
-		nouveauJeton->suivant = unJoueur->listeJetons;
-	}else{
-		nouveauJeton->suivant = NULL;
-	}
+	nouveauJeton->suivant = unJoueur->listeJetons;
 	unJoueur->listeJetons = nouveauJeton;
 	(unJoueur->nbJeton)++;
 }
