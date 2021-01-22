@@ -3,7 +3,6 @@
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
-#include "couleur.h"
 
 using namespace std;
 
