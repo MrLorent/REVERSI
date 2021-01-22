@@ -30,6 +30,7 @@ void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]);
 bool saisieMenuCorrecte(int saisieUt);
 bool saisieCorrecte(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], int coorCase[2]);
 void convertCoordonnees(char saisieUt[2], int saisieTraduite[2]);
+bool quitterPartie(Jeu * leJeu);
 
 // SAUVEGARDE
 void sauvegardePartie(Jeu leJeu);

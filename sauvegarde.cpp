@@ -10,7 +10,7 @@ using namespace std;
 
 void sauvegardePartie(Jeu leJeu){
 
-    string const nomFichier("./Sauvegarde.txt");
+    string const nomFichier("./sauvegarde.txt");
     ofstream fichier(nomFichier.c_str());
 
     if(fichier)    
@@ -54,13 +54,13 @@ void sauvegardePartie(Jeu leJeu){
 }
 
 void chargementPartie(Jeu *leJeu){
-      ifstream fichier("./Sauvegarde.txt");
+      ifstream fichier("./sauvegarde.txt");
       if(fichier) {
             //L'ouverture s'est bien passée, on peut donc lire
 
             //On lit le mode de jeu (int) depuis le fichier
             int mode;
-            fichier >> mode;          
+            fichier >> mode;
             leJeu->mode = mode;
             // cout << "\nmode recup : " << leJeu->mode << endl ;
 
@@ -148,6 +148,7 @@ void chargementPartie(Jeu *leJeu){
             // cout << "le joueur courant est " << (leJeu->joueurCourant->nom) << endl ;
 
             // cout << "La derniere partie a ete chargee. Vous pouvez maintenant la reprendre." << endl;
+            remove("sauvegarde.txt");
         }else
         {
             cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;

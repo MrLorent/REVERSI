@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include "modele.h"
 #include "vue.h"
@@ -12,7 +13,7 @@ int main(){
     int toursPasses = 0, actionSaisie = 0;
     int coorSaisie[2];
     char saisieUt[2];
-    bool partieTerminee = false, premierPassage = true, quitter = false;
+    bool partieTerminee, partieQuittee, premierPassage, quitter = false;
 
 
     system("clear");
@@ -39,7 +40,10 @@ int main(){
             leJeu.mode = actionSaisie;
             initJeu(&leJeu);
         }
-        
+
+        partieQuittee = false;
+        partieTerminee = false;
+
         do{
             system("clear");
             premierPassage = true;
@@ -85,7 +89,10 @@ int main(){
                         }
                         cout << "Passer à la suite ? (o/n)" << endl;
                         cin >> saisieUt;
-                    }while(saisieUt[0] != 'o' && saisieUt[0] != 'O');
+                        if(tolower(saisieUt[0]) == 'q'){
+                            partieQuittee = quitterPartie(&leJeu);
+                        }
+                    }while(!partieQuittee && tolower(saisieUt[0]) != 'o');
                 }else{
                     // Affichage du plateau
                     affichePlateau(leJeu.plateau);
@@ -94,8 +101,13 @@ int main(){
                     cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
                     do{
                         cin >> saisieUt;
-                    }while(!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente));
-                    joueLeCoup(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente);
+                        if(tolower(saisieUt[0]) == 'q'){
+                            partieQuittee = quitterPartie(&leJeu);
+                        }
+                    }while(!partieQuittee && (!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente)));
+                    if(!partieQuittee){
+                        joueLeCoup(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente);
+                    }
                 }
 
                 // FIN DU TOUR
@@ -125,7 +137,10 @@ int main(){
                             cout << "Passer à la suite ? (o/n)" << endl;
                             }
                         cin >> saisieUt;
-                    }while(saisieUt[0] != 'o' && saisieUt[0] != 'O');
+                        if(tolower(saisieUt[0]) == 'q'){
+                            partieQuittee = quitterPartie(&leJeu);
+                        }
+                    }while(!partieQuittee && tolower(saisieUt[0]) != 'o');
                 
                 toursPasses++;
             }
@@ -134,30 +149,33 @@ int main(){
             if(leJeu.joueur1.nbJeton + leJeu.joueur2.nbJeton == 64 || toursPasses == 2){
                 partieTerminee = true;
             }
-        }while(!partieTerminee);
+        }while(!partieTerminee && !partieQuittee);
 
-        system("clear");
+        if(!partieQuittee){
+            system("clear");
 
-        cout << "PARTIE TERMINÉE !" << endl;
-        ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
-        ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
-        affichePlateau(leJeu.plateau);
+            cout << "PARTIE TERMINÉE !" << endl;
+            ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
+            ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
+            affichePlateau(leJeu.plateau);
 
-        if(leJeu.joueur1.nbJeton  > leJeu.joueur2.nbJeton){
-            cout << "Le grand gagnant est " << leJeu.joueur1.nom << " avec " << leJeu.joueur1.nbJeton << " jetons contre " << leJeu.joueur2.nbJeton << " ! Félicitations à lui !" << endl;
-        }else{
-            if(leJeu.joueur1.nbJeton  < leJeu.joueur2.nbJeton){
-                cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " ! Félicitations à lui !" << endl;
+            if(leJeu.joueur1.nbJeton  > leJeu.joueur2.nbJeton){
+                cout << "Le grand gagnant est " << leJeu.joueur1.nom << " avec " << leJeu.joueur1.nbJeton << " jetons contre " << leJeu.joueur2.nbJeton << " ! Félicitations à lui !" << endl;
             }else{
-                cout << "C'est une égalité ! Félicitaion à vous deux ! " << endl;
+                if(leJeu.joueur1.nbJeton  < leJeu.joueur2.nbJeton){
+                    cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " ! Félicitations à lui !" << endl;
+                }else{
+                    cout << "C'est une égalité ! Félicitaion à vous deux ! " << endl;
+                }
             }
+            do{
+                cout << "retour au menu principal ? (o/n)" << endl;
+                cin >> saisieUt;
+            }while(saisieUt[0] != 'o' && saisieUt[0] != 'O');
         }
-        do{
-            cout << "retour au menu principal ? (o/n)" << endl;
-            cin >> saisieUt;
-        }while(saisieUt[0] != 'o' && saisieUt[0] != 'O');
 
         system("clear");
+    
     }while(!quitter);
 
     return 0;
@@ -168,7 +186,18 @@ bool saisieMenuCorrecte(int saisieUt){
         cout << "Erreur: Veuillez saisir un numéro correspondant à l'une des propositions ci-dessus :" << endl;
         return false;
     }else{
-        return true;
+        if(saisieUt == CHARGEMENT){
+            ifstream fichier("./sauvegarde.txt");
+            if(fichier){
+                return true;
+            }else{
+                cout << "Erreur: aucune partie en cours n'a été trouvée." << endl;
+                cout << "Veuillez saisir une autre action à réaliser :" << endl;
+                return false;
+            }
+        }else{
+            return true;
+        }
     }
 }
 
@@ -230,4 +259,24 @@ void convertCoordonnees(char saisieUt[2], int coorCase[2]){
             break;
         }
     coorCase[1] = ((int)(saisieUt[1] - '0')) - 1;
+}
+
+bool quitterPartie(Jeu * leJeu){
+    char saisieUt = 'a';
+
+    system("clear");
+    do{
+        cout << "Souhaitez-vous réellement quitter la partie ? (o/n)" << endl;
+        cin >> saisieUt;
+    }while(tolower(saisieUt) != 'o' && tolower(saisieUt) != 'n');
+
+    if(saisieUt == 'o'){
+        if(leJeu->mode == ORDINATEUR && leJeu->joueurCourant->nom == leJeu->joueur2.nom){
+            changeJoueurCourant(leJeu);
+        }
+        sauvegardePartie(*leJeu);
+        return true;
+    }else{
+        return false;
+    }
 }
