@@ -82,15 +82,13 @@ void chargementPartie(Jeu *leJeu){
             leJeu->joueur1.couleur = c1[0];
             // cout << "1e couleur recup : " << leJeu->joueur1.couleur << endl ;
 
-            //
-
             //On lit les coordonnees du joueur 1 (int) depuis le fichier
             //Jeton *curseur=leJeu->joueur1.listeJetons;
-			leJeu->joueur1.nbJeton = 0;
             int tab_interm[2];
-            int coord1, coord2;
+            int coord1, coord2; 
             fichier >> coord1;
             fichier >> coord2;
+			leJeu->joueur1.nbJeton = 0;
             do{
                 tab_interm[0] = coord1;
                 tab_interm[1] = coord2;
@@ -120,9 +118,9 @@ void chargementPartie(Jeu *leJeu){
             // cout << "2e couleur recup : " << leJeu->joueur2.couleur << endl ;
 
             //On lit les coordonnees du joueur 2 (int) depuis le fichier
-			leJeu->joueur1.nbJeton = 0;
             fichier >> coord1;
             fichier >> coord2;
+			leJeu->joueur2.nbJeton = 0;
             do{
                 tab_interm[0] = coord1;
                 tab_interm[1] = coord2;

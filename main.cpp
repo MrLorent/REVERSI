@@ -36,8 +36,8 @@ int main(){
             initPlateau(leJeu.plateau);
             chargementPartie(&leJeu);
         }else{
-            initJeu(&leJeu);
             leJeu.mode = actionSaisie;
+            initJeu(&leJeu);
         }
         
         do{
