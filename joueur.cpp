@@ -7,6 +7,10 @@
 using namespace std;
 
 // MODELES
+
+/**
+ * Initialise un joueur à partir des données fournies en paramètre et d'une la saisie utilisateur
+*/
 void initJoueur(Joueur * unJoueur, char uneCouleur){
 	cout << MAGENTA << "Veuillez entrer le nom du joueur:" << ANNULE_COULEUR << endl;
 	cin >> unJoueur->nom;
@@ -15,6 +19,9 @@ void initJoueur(Joueur * unJoueur, char uneCouleur){
 	unJoueur->listeJetons = NULL;
 }
 
+/**
+ * Initialise un joueur artificiel
+*/
 void initOrdinateur(Joueur * unJoueur){
 	char nomOrdi[8] = {'M','i','c','h','e','l','l','e'};
 	
@@ -26,14 +33,11 @@ void initOrdinateur(Joueur * unJoueur){
 	unJoueur->listeJetons = NULL;
 }
 
-// VUES
-void afficheJoueur(Joueur joueur){
-	cout << "AFFICHAGE DES INFORMATIONS D'UN JOUEUR" << endl;
-	cout << "Nom: " << joueur.nom << endl;
-	cout << "Nombre de jetons: " << joueur.nbJeton << endl;
-}
-
 // CONTROLEURS
+
+/**
+ * Créer un nouveau jeton à partir des coordonnées fournies en paramètre, et l'ajoute à la liste de jeton du joueur indiqué
+*/
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	Jeton * nouveauJeton = new Jeton;
 	initJeton(nouveauJeton, unJoueur->couleur, coordonnees);
@@ -42,6 +46,9 @@ void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	(unJoueur->nbJeton)++;
 }
 
+/**
+ * Supprime le jeton correspondant aux coordonnées fournies en paramètre de la liste de jeton du joueur indiqué
+*/
 void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	Jeton * tmp = unJoueur->listeJetons;
 	Jeton * precedent = NULL;
@@ -65,12 +72,16 @@ void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	}
 }
 
+/**
+ * Identifie le coups à jouer permettant de capturer le plus de jetons adverse, et le joue
+*/
 int ordinateurJoue(Jeu * leJeu){
 	int nbCoupsJouables = 0;
 	bool coupsIdentiques = true;
 	CoupJouable * coupAJouer = leJeu->coupsJouables;
 	CoupJouable * tmp = leJeu->coupsJouables;
 
+	// On parcourt la liste de coups à jouer en ne retenant que le coups capturant le plus de jetons adverses
 	while(tmp != NULL){
 		if(tmp->nbCaptures > coupAJouer->nbCaptures){
 			coupAJouer = tmp;
@@ -82,7 +93,8 @@ int ordinateurJoue(Jeu * leJeu){
 
 	tmp = leJeu->coupsJouables;
 
-	if (coupsIdentiques){
+	// Si tous le coups à jouer permettent de capturer le même nombre de jetons, alors on en choisi un au hasard dans la liste
+	if(coupsIdentiques){
 		int rang = rand()%nbCoupsJouables;
 		for(int i=0; i<rang; i++){
 			tmp = tmp->suivant;
@@ -90,6 +102,7 @@ int ordinateurJoue(Jeu * leJeu){
 		coupAJouer = tmp;
 	}
 
+	// On joue le coup choisi
 	joueLeCoup(leJeu->plateau, coupAJouer->emplacement->coordonnees, &leJeu->joueur2, &leJeu->joueur1);
 
 	return coupAJouer->nbCaptures;

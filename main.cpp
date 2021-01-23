@@ -127,7 +127,7 @@ int main(){
                             if(tolower(saisieUt[0]) == 'q'){
                                 partieQuittee = quitterPartie(&leJeu);
                             }
-                        }while(!partieQuittee && (!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente)));
+                        }while(!partieQuittee && (!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie)));
 
                         //Si le joueur n'a pas décidé de quitter la partie, on joue le coup
                         if(!partieQuittee){

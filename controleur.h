@@ -7,7 +7,7 @@ bool directionJouable(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], Jeton * position,
 void enregistreCoupJouable(ListeCoupsJouables * liste, Marqueur * emplacement, int nbCaptures);
 int estEnregistre(ListeCoupsJouables * coupsJouables, int coorEmplacement[2]);
 void recupereCoupJouable(ListeCoupsJouables uneListe, int rang, CoupJouable * leCoupCherche);
-bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2], Joueur * joueurCourant, Joueur * adversaire);
+bool coupJouable(ListeCoupsJouables * coupsJouables, int caseSouhaitee[2]);
 void joueLeCoup(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], int coorJetonPlace[2], Joueur * joueurCourant, Joueur * adversaire);
 bool directionCapture(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], ListeJetons* jetonsCaptures, int position[2], int uneDirection, char couleurAdversaire, char objectif);
 void videListeCoupsJouables(ListeCoupsJouables * uneListe);
