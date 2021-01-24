@@ -1,14 +1,17 @@
 #include <iostream>
+#include <cstdlib>
 #include <cstring>
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
-#include "couleur.h"
-
 
 using namespace std;
 
 // MODELES
+
+/**
+ * Initialise un joueur à partir des données fournies en paramètre et d'une la saisie utilisateur
+*/
 void initJoueur(Joueur * unJoueur, char uneCouleur){
 	cout << MAGENTA << "Veuillez entrer le nom du joueur:" << ANNULE_COULEUR << endl;
 	cin >> unJoueur->nom;
@@ -17,10 +20,13 @@ void initJoueur(Joueur * unJoueur, char uneCouleur){
 	unJoueur->listeJetons = NULL;
 }
 
+/**
+ * Initialise un joueur artificiel
+*/
 void initOrdinateur(Joueur * unJoueur){
-	char nomOrdi[8] = {'M','i','c','h','e','l','l','e'};
+	char nomOrdi[9] = {'M','i','c','h','e','l','l','e', 0};
 	
-	for(int i=0; i<8;i++){
+	for(int i=0; i<9;i++){
 		unJoueur->nom[i] = nomOrdi[i];
 	}
 	unJoueur->couleur = 'n';
@@ -28,14 +34,11 @@ void initOrdinateur(Joueur * unJoueur){
 	unJoueur->listeJetons = NULL;
 }
 
-// VUES
-void afficheJoueur(Joueur joueur){
-	cout << "AFFICHAGE DES INFORMATIONS D'UN JOUEUR" << endl;
-	cout << "Nom: " << joueur.nom << endl;
-	cout << "Nombre de jetons: " << joueur.nbJeton << endl;
-}
-
 // CONTROLEURS
+
+/**
+ * Créer un nouveau jeton à partir des coordonnées fournies en paramètre, et l'ajoute à la liste de jeton du joueur indiqué
+*/
 void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	Jeton * nouveauJeton = new Jeton;
 	initJeton(nouveauJeton, unJoueur->couleur, coordonnees);
@@ -44,6 +47,9 @@ void ajouteJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	(unJoueur->nbJeton)++;
 }
 
+/**
+ * Supprime le jeton correspondant aux coordonnées fournies en paramètre de la liste de jeton du joueur indiqué
+*/
 void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 	Jeton * tmp = unJoueur->listeJetons;
 	Jeton * precedent = NULL;
@@ -65,4 +71,40 @@ void supprimeJetonJoueur(Joueur * unJoueur, int coordonnees[2]){
 		precedent = tmp;
 		tmp = tmp->suivant;
 	}
+}
+
+/**
+ * Identifie le coups à jouer permettant de capturer le plus de jetons adverse, et le joue
+*/
+int ordinateurJoue(Jeu * leJeu){
+	int nbCoupsJouables = 0;
+	bool coupsIdentiques = true;
+	CoupJouable * coupAJouer = leJeu->coupsJouables;
+	CoupJouable * tmp = leJeu->coupsJouables;
+
+	// On parcourt la liste de coups à jouer en ne retenant que le coups capturant le plus de jetons adverses
+	while(tmp != NULL){
+		if(tmp->nbCaptures > coupAJouer->nbCaptures){
+			coupAJouer = tmp;
+			coupsIdentiques = false;
+		}
+		nbCoupsJouables++;
+		tmp = tmp->suivant;
+	}
+
+	// Si tous le coups à jouer permettent de capturer le même nombre de jetons, alors on en choisi un au hasard dans la liste
+	if(coupsIdentiques){
+		int rang = rand() % nbCoupsJouables;
+		tmp = leJeu->coupsJouables;
+
+		for(int i=0; i<rang; i++){
+			tmp = tmp->suivant;
+		}
+		coupAJouer = tmp;
+	}
+
+	// On joue le coup choisi
+	joueLeCoup(leJeu->plateau, coupAJouer->emplacement->coordonnees, &leJeu->joueur2, &leJeu->joueur1);
+
+	return coupAJouer->nbCaptures;
 }

@@ -1,11 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <cstring>
 #include "modele.h"
 #include "vue.h"
 #include "controleur.h"
-#include "couleur.h"
 
 using namespace std;
 
@@ -54,15 +52,18 @@ int main(){
         }
 
         if(!quitter){
+            // INITIALISATION DES VARIABLES GLOBALES D'UNE PARTIE
             partieQuittee = false;
             partieTerminee = false;
 
             do{
-                system("clear");
+                // INITIALISATION DES VARIABLES GLOBALES D'UN TOUR DE JEU
                 premierPassage = true;
-                cout << endl;
+
                 // DÉBUT DU TOUR
                 // Affichage des informations sur le joueur courant
+                system("clear");
+                cout << endl;
                 cout << CYAN << "NOUVEAU TOUR DE JEU:" << ANNULE_COULEUR << endl;
                 cout << "Joueur courant: " << leJeu.joueurCourant->nom << endl;
                 cout << "Nombre de jeton(s) du joueur courant: " << leJeu.joueurCourant->nbJeton << endl;
@@ -72,40 +73,33 @@ int main(){
                 ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
 
                 if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
+                    // Si l'on joue face à l'ordinateur, on affiche une première fois  le plateau pour que le joueur voit le résultat de son tour précédent
                     cout << endl;
                     cout << "Voici le plateau suite à votre précédent tour :" << endl;
                     affichePlateau(leJeu.plateau);
+                }else{
+                    // SI c'est à un utilisateur de jouer, on le guide quelque peut:
+                    if(leJeu.joueurCourant == &leJeu.joueur1){
+                        cout << "Vous êtes les X et vous devez capturer les O." << endl;
+                    }else{
+                        cout << "Vous êtes les O et vous devez capturer les X." << endl;
+                    }
+                    cout << "(les cases * correspondent aux cases valides que vous pouvez entrer.)" << endl;
                 }
 
+                // DÉROULÉ DU TOUR
+                //On vérifie si le joueur courant peut jouer
                 if(analyseCoupsJouables(leJeu.plateau, leJeu.joueurCourant, leJeu.joueurEnAttente, &leJeu.coupsJouables)){
+                    // Si le joueur courant peut jouer: 
+                    
+                    // On ajoute les coups jouables au plateau
                     ajouteCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
                     
                     if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
-                        int nbCoupsJouables = 0;
-                        bool coupsIdentiques = true;
-                        CoupJouable * coupAJouer = leJeu.coupsJouables;
-                        CoupJouable * tmp = leJeu.coupsJouables;
+                        // Si l'on est dans le cas d'une partie face à l'ordinateur et que c'est son tour de jouer:
 
-                        while(tmp != NULL){
-                            if(tmp->nbCaptures > coupAJouer->nbCaptures){
-                                coupAJouer = tmp;
-                                coupsIdentiques = false;
-                            }
-                            nbCoupsJouables++;
-                            tmp = tmp->suivant;
-                        }
-
-                        tmp = leJeu.coupsJouables;
-
-                        if (coupsIdentiques){
-                            int rang = rand()%nbCoupsJouables;
-                            for(int i=0; i<rang; i++){
-                                tmp = tmp->suivant;
-                            }
-                            coupAJouer = tmp;
-                        }
-
-                        joueLeCoup(leJeu.plateau, coupAJouer->emplacement->coordonnees, &leJeu.joueur2, &leJeu.joueur1);
+                        // On fait jouer l'ordinateur et on récupère le nombre de jetons qu'il a capturé
+                        int nbCaptures = ordinateurJoue(&leJeu);
 
                         // Affichage du plateau
                         ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
@@ -116,7 +110,7 @@ int main(){
                         // FIN DU TOUR
                         do{
                             if(premierPassage){
-                                cout << "Elle vous a capturé " << coupAJouer->nbCaptures << " jetons." << endl;
+                                cout << "Elle vous a capturé " << nbCaptures << " jetons." << endl;
                                 premierPassage = false;
                             }else{
                                 cout << "Votre énervement ne changera rien... Il faut tourner la page maintenant." << endl;
@@ -128,11 +122,11 @@ int main(){
                                 partieQuittee = quitterPartie(&leJeu);
                             }
                         }while(!partieQuittee && tolower(saisieUt[0]) != 'o');
+
                     }else{
                         // Affichage du plateau
                         affichePlateau(leJeu.plateau);
 
-                        // DÉROULÉ DU TOUR
                         cout << "Quitter la partie = 'q'" << endl;
                         cout << "Quelle case souhaitez-vous prendre " << leJeu.joueurCourant->nom << " ?" << endl;
                         do{
@@ -140,22 +134,26 @@ int main(){
                             if(tolower(saisieUt[0]) == 'q'){
                                 partieQuittee = quitterPartie(&leJeu);
                             }
-                        }while(!partieQuittee && (!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente)));
+                        }while(!partieQuittee && (!saisieCorrecte(leJeu.plateau, saisieUt, coorSaisie) || !coupJouable(&leJeu.coupsJouables, coorSaisie)));
+
+                        //Si le joueur n'a pas décidé de quitter la partie, on joue le coup
                         if(!partieQuittee){
                             joueLeCoup(leJeu.plateau, coorSaisie, leJeu.joueurCourant, leJeu.joueurEnAttente);
                         }
-                        
-                        // FIN DU TOUR
-                        toursPasses = 0;
-                        retireCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
                     }
+
+                    // FIN DU TOUR
+                    toursPasses = 0;
+                    retireCoupsJouablesPlateau(leJeu.plateau, &leJeu.coupsJouables);
                 }else{
+                    // Si le joueur courant ne peut pas jouer:
 
                     // Affichage du plateau
                     affichePlateau(leJeu.plateau);
 
                         do{
                             if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
+                                // Dans le cas d'une partie face à l'ordinateur
                                 if(premierPassage){
                                     cout << "Malheureusement pour elle, Michelle n'a aucun coup jouable." << endl;
                                     premierPassage = false;
@@ -165,8 +163,9 @@ int main(){
                                 cout << "Quitter la partie = 'q'" << endl;
                                 cout << "Passer à la suite = 'o'" << endl;
                             }else{
+                                // Dans le cas d'un joueur classique
                                 if(premierPassage){
-                                    cout << "Malheureseument, vous n'avez aucun coup jouable..." << endl;
+                                    cout << "Malheureusement, vous n'avez aucun coup jouable..." << endl;
                                     premierPassage = false;
                                 }else{
                                     cout << "Votre énervement ne changera rien... Il faut tourner la page maintenant." << endl;
@@ -184,26 +183,32 @@ int main(){
                 }
                 // Passage au tour suivant
                 changeJoueurCourant(&leJeu);
+
+                // Si le plateau est remplit, ou si aucun des joueurs ne peut jouer, on met fin à la partie
                 if(leJeu.joueur1.nbJeton + leJeu.joueur2.nbJeton == 64 || toursPasses == 2){
                     partieTerminee = true;
                 }
+
             }while(!partieTerminee && !partieQuittee);
 
             if(!partieQuittee){
                 system("clear");
 
-                cout << "PARTIE TERMINÉE !" << endl;
+                cout << CYAN << "PARTIE TERMINÉE !" << ANNULE_COULEUR << endl;
+
+                // On affiche le plateau final
                 ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
                 ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
                 affichePlateau(leJeu.plateau);
 
+                // On affiche le gagnant et son nombre de jetons final
                 if(leJeu.joueur1.nbJeton  > leJeu.joueur2.nbJeton){
-                    cout << "Le grand gagnant est " << leJeu.joueur1.nom << " avec " << leJeu.joueur1.nbJeton << " jetons contre " << leJeu.joueur2.nbJeton << " ! Félicitations à lui !" << endl;
+                    cout << "Le grand gagnant est " << leJeu.joueur1.nom << " avec " << leJeu.joueur1.nbJeton << " jetons contre " << leJeu.joueur2.nbJeton << " pour " << leJeu.joueur2.nom << " ! Félicitations à lui !" << endl;
                 }else{
                     if(leJeu.joueur1.nbJeton  < leJeu.joueur2.nbJeton){
-                        cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " ! Félicitations à lui !" << endl;
+                        cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " pour " << leJeu.joueur1.nom << " ! Félicitations à lui !" << endl;
                     }else{
-                        cout << "C'est une égalité ! Félicitaion à vous deux ! " << endl;
+                        cout << "C'est une égalité ! Félicitations à vous deux ! " << endl;
                     }
                 }
                 do{
@@ -215,6 +220,7 @@ int main(){
             system("clear");
         
         }else{
+            // Si le joueur décide de quitter le programme
             cout << "À bientôt !" << endl;
         }
     }while(!quitter);
@@ -223,10 +229,12 @@ int main(){
 }
 
 bool saisieMenuCorrecte(int saisieUt){
+    // On vérifie que la saisie correspond bien à un des cas possibles
     if(saisieUt != HUMAIN && saisieUt != ORDINATEUR && saisieUt != CHARGEMENT && saisieUt != QUITTER){
         cout << "Erreur: Veuillez saisir un numéro correspondant à l'une des propositions ci-dessus :" << endl;
         return false;
     }else{
+        // L'utilisateur choisi de chargé une partie, on vérifie qu'une sauvegarde existe bien
         if(saisieUt == CHARGEMENT){
             ifstream fichier("./sauvegarde.txt");
             if(fichier){
@@ -272,6 +280,7 @@ bool saisieCorrecte(Jeton * plateau[MAXLARGEUR][MAXLARGEUR], char saisieUt[2], i
 }
 
 void convertCoordonnees(char saisieUt[2], int coorCase[2]){
+    // On converit les coordonnées de char à int en prenant en compte le décalage en -1 des tableaux
     switch (saisieUt[0])
         {
         case 'a':
@@ -312,9 +321,13 @@ bool quitterPartie(Jeu * leJeu){
     }while(tolower(saisieUt) != 'o' && tolower(saisieUt) != 'n');
 
     if(saisieUt == 'o'){
+        // Si l'utilisateur quitte la partie, on sauvegarde la partie en cours:
+
+        // Dans le cas où la partie est quitté alors que le joueur courant est l'ordinateur, on change de joueur afin que l'ordinateur ne rejoue pas une seconde fois au chargement de la partie
         if(leJeu->mode == ORDINATEUR && leJeu->joueurCourant->nom == leJeu->joueur2.nom){
             changeJoueurCourant(leJeu);
         }
+        // On sauvegarde la partie en cours
         sauvegardePartie(*leJeu);
         return true;
     }else{
