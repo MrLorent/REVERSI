@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include <cstring>
 #include "modele.h"
 #include "vue.h"
@@ -23,9 +24,9 @@ void initJoueur(Joueur * unJoueur, char uneCouleur){
  * Initialise un joueur artificiel
 */
 void initOrdinateur(Joueur * unJoueur){
-	char nomOrdi[8] = {'M','i','c','h','e','l','l','e'};
+	char nomOrdi[9] = {'M','i','c','h','e','l','l','e', 0};
 	
-	for(int i=0; i<8;i++){
+	for(int i=0; i<9;i++){
 		unJoueur->nom[i] = nomOrdi[i];
 	}
 	unJoueur->couleur = 'n';
@@ -91,11 +92,11 @@ int ordinateurJoue(Jeu * leJeu){
 		tmp = tmp->suivant;
 	}
 
-	tmp = leJeu->coupsJouables;
-
 	// Si tous le coups à jouer permettent de capturer le même nombre de jetons, alors on en choisi un au hasard dans la liste
 	if(coupsIdentiques){
-		int rang = rand()%nbCoupsJouables;
+		int rang = rand() % nbCoupsJouables;
+		tmp = leJeu->coupsJouables;
+
 		for(int i=0; i<rang; i++){
 			tmp = tmp->suivant;
 		}

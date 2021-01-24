@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <cstring>
 #include "modele.h"
 #include "vue.h"
@@ -73,11 +72,19 @@ int main(){
                 ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
                 ajouteJetonPlateau(&leJeu.joueur2, leJeu.plateau);
 
-                // Si l'on joue face à l'ordinateur, on affiche une première fois  le plateau pour que le joueur voit le résultat de son tour précédent
                 if(leJeu.mode == ORDINATEUR && leJeu.joueurCourant == &leJeu.joueur2){
+                    // Si l'on joue face à l'ordinateur, on affiche une première fois  le plateau pour que le joueur voit le résultat de son tour précédent
                     cout << endl;
                     cout << "Voici le plateau suite à votre précédent tour :" << endl;
                     affichePlateau(leJeu.plateau);
+                }else{
+                    // SI c'est à un utilisateur de jouer, on le guide quelque peut:
+                    if(leJeu.joueurCourant == &leJeu.joueur1){
+                        cout << "Vous êtes les X et vous devez capturer les O." << endl;
+                    }else{
+                        cout << "Vous êtes les O et vous devez capturer les X." << endl;
+                    }
+                    cout << "(les cases * correspondent aux cases valides que vous pouvez entrer.)" << endl;
                 }
 
                 // DÉROULÉ DU TOUR
@@ -158,7 +165,7 @@ int main(){
                             }else{
                                 // Dans le cas d'un joueur classique
                                 if(premierPassage){
-                                    cout << "Malheureseument, vous n'avez aucun coup jouable..." << endl;
+                                    cout << "Malheureusement, vous n'avez aucun coup jouable..." << endl;
                                     premierPassage = false;
                                 }else{
                                     cout << "Votre énervement ne changera rien... Il faut tourner la page maintenant." << endl;
@@ -187,7 +194,7 @@ int main(){
             if(!partieQuittee){
                 system("clear");
 
-                cout << "PARTIE TERMINÉE !" << endl;
+                cout << CYAN << "PARTIE TERMINÉE !" << ANNULE_COULEUR << endl;
 
                 // On affiche le plateau final
                 ajouteJetonPlateau(&leJeu.joueur1, leJeu.plateau);
@@ -201,7 +208,7 @@ int main(){
                     if(leJeu.joueur1.nbJeton  < leJeu.joueur2.nbJeton){
                         cout << "Le grand gagnant est " << leJeu.joueur2.nom << " avec " << leJeu.joueur2.nbJeton << " jetons contre " << leJeu.joueur1.nbJeton << " pour " << leJeu.joueur1.nom << " ! Félicitations à lui !" << endl;
                     }else{
-                        cout << "C'est une égalité ! Félicitaion à vous deux ! " << endl;
+                        cout << "C'est une égalité ! Félicitations à vous deux ! " << endl;
                     }
                 }
                 do{
